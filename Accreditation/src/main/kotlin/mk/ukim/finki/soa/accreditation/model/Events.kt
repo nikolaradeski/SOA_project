@@ -17,3 +17,16 @@ data class StudyProgramDetailsCreatedEvent(
             studyProgramId = command.studyProgramId
     )
 }
+
+
+abstract class StudyProgramEvent(
+    open val studyProgramId: StudyProgramId
+) : AbstractEvent(studyProgramId)
+
+data class StudyProgramCreatedEvent(
+    override val studyProgramId: StudyProgramId
+): StudyProgramEvent(studyProgramId){
+    constructor(command: CreateStudyProgramCommand) : this(
+        studyProgramId = StudyProgramId()
+    )
+}
