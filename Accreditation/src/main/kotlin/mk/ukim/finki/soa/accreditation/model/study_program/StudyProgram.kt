@@ -1,13 +1,17 @@
 package mk.ukim.finki.soa.accreditation.model.study_program
 
 import jakarta.persistence.*
+import mk.ukim.finki.soa.accreditation.model.AccreditationId
 import mk.ukim.finki.soa.accreditation.model.CreateStudyProgramCommand
 import mk.ukim.finki.soa.accreditation.model.StudyProgramCreatedEvent
 import mk.ukim.finki.soa.accreditation.model.StudyProgramId
+import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
+import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
+import java.time.Duration
 
 
 @Entity
@@ -16,23 +20,20 @@ public class StudyProgram {
 
     @AggregateIdentifier
     @EmbeddedId
-    @AttributeOverride(name = "value", column = Column(name = "id"))
-    private lateinit var id: StudyProgramId
-
-    //private lateinit var code: Code
+    @AttributeOverride(name = "value", column = Column(name = "code"))
+    private lateinit var code: StudyProgramId
 
     private lateinit var name: String
 
-    private var nameEn: String? = null
+    private lateinit var nameEn: String
 
-    //tuka mozhe private valobj Order
-    //
-    //private var order: Float? = null
+    @Embedded
+    @AttributeOverride(name = "order", column = Column(name = "study_program_order"))
+    private var order: Order? = null
 
-    //tuka mozhe private valobj Year
-    private var durationYears: Int? = null
-
-    private var durationSemesters: Int? = null
+    @Embedded
+    @AttributeOverride(name = "durationYears", column = Column(name = "duration_years"))
+    private var durationYears: DurationYears? = null;
 
     @Column(length = 8000)
     private var generalInformation: String? = null
@@ -48,33 +49,44 @@ public class StudyProgram {
 
     private var onEnglish: Boolean = false
 
-    //@Enumerated(EnumType.STRING)
-    //private var studyCycle: StudyCycle? = null
+    @Enumerated(EnumType.STRING)
+    private lateinit var studyCycle: StudyCycle
 
-    //@ManyToOne
-    //private var accreditation: Accreditation? = null
+    @Embedded
+    @AttributeOverride(name = "value", column = Column(name = "accreditation_id"))
+    private lateinit var accreditation: AccreditationId;
 
     private var bilingual: Boolean = false
 
     //@ElementCollection
     //private var fields: List<AccreditationDescriptiveField> = emptyList()
 
-    //@ManyToOne
-    //private var coordinator: Professor? = null
+    @Embedded
+    @AttributeOverride(name = "value", column = Column(name = "professor_id"))
+    private var coordinator: ProfessorId? = null
 
     @CommandHandler
     constructor(command: CreateStudyProgramCommand) {
-        val event = StudyProgramCreatedEvent(
-                studyProgramId = StudyProgramId(),
-                name = command.name
-        )
+        val event = StudyProgramCreatedEvent(command)
         this.on(event)
         AggregateLifecycle.apply(event)
     }
 
     fun on(event: StudyProgramCreatedEvent) {
-        this.id = event.studyProgramId
+        this.code = event.studyProgramId
         this.name = event.name
+        this.nameEn = event.nameEn
+        this.order = Order(event.order)
+        this.durationYears = DurationYears(event.durationYears)
+        this.generalInformation = event.generalInformation
+        this.graduationTitle = event.graduationTitle
+        this.graduationTitleEn = event.graduationTitleEn
+        this.subjectRestrictions = event.subjectRestrictions
+        this.onEnglish = event.inEnglish
+        this.studyCycle = event.studyCycle
+        this.accreditation = event.accreditation
+        this.bilingual = event.bilingual
+        this.coordinator = event.coordinator
     }
 
 }
