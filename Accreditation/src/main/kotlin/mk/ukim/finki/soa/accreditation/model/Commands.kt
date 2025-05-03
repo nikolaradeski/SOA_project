@@ -34,3 +34,56 @@ data class CreateStudyProgramCommand(
 
 
 }
+
+data class UpdateStudyProgramNameCommand(
+        val studyProgramId: StudyProgramId,
+        val name: String,
+        val nameEn: String
+)
+
+
+data class UpdateStudyProgramOrderCommand(
+        val studyProgramId: StudyProgramId,
+        val order: Int
+)
+
+data class UpdateStudyProgramDurationYearsCommand(
+        val studyProgramId: StudyProgramId,
+        val durationYears: Int
+)
+
+data class UpdateStudyProgramGeneralInformationCommand(
+        val studyProgramId: StudyProgramId,
+        val generalInformation: String
+)
+
+data class UpdateStudyProgramGraduationTitleCommand(
+        val studyProgramId: StudyProgramId,
+        val graduationTitle: String,
+        val graduationTitleEn: String
+)
+
+data class UpdateStudyProgramEnglishAvailabilityCommand(
+        val studyProgramId: StudyProgramId,
+        val inEnglish: Boolean
+)
+
+data class UpdateStudyProgramBilingualCommand(
+        val studyProgramId: StudyProgramId,
+        val bilingual: Boolean
+)
+
+data class UpdateStudyProgramCoordinatorCommand(
+        val studyProgramId: StudyProgramId,
+        val coordinator: ProfessorId
+)
+
+data class UpdateStudyProgramStudyCycleCommand(
+        val studyProgramId: StudyProgramId,
+        val studyCycle: StudyCycle
+)
+
+data class UpdateStudyProgramSubjectRestrictionsCommand(
+        val studyProgramId: StudyProgramId,
+        val subjectRestrictions: String
+)
