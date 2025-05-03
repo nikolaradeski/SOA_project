@@ -2,10 +2,8 @@ package mk.ukim.finki.soa.accreditation.repository
 
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
-import mk.ukim.finki.soa.accreditation.model.StudyProgramDetailsId
 import mk.ukim.finki.soa.accreditation.model.StudyProgramId
 import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgram
-import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgramDetails
 import org.axonframework.common.jpa.SimpleEntityManagerProvider
 import org.axonframework.eventhandling.EventBus
 import org.axonframework.messaging.annotation.ParameterResolverFactory
