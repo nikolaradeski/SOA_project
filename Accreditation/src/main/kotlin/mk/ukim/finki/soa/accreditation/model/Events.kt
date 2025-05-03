@@ -4,16 +4,16 @@ abstract class AbstractEvent(open val identifier: Identifier<out Any>) {
 
 }
 
-abstract class StudyProgramDetailsEvent(
-        open val studyProgramDetailsId: StudyProgramDetailsId
-) : AbstractEvent(studyProgramDetailsId)
+abstract class StudyProgramEvent(
+        open val studyProgramId: StudyProgramId
+) : AbstractEvent(studyProgramId)
 
-data class StudyProgramDetailsCreatedEvent(
-        override val studyProgramDetailsId: StudyProgramDetailsId,
-        val studyProgramId: StudyProgramId
-) : StudyProgramDetailsEvent(studyProgramDetailsId) {
-    constructor(command: CreateStudyProgramDetailsCommand) : this(
-            studyProgramDetailsId = StudyProgramDetailsId(),
-            studyProgramId = command.studyProgramId
+data class StudyProgramCreatedEvent(
+        override val studyProgramId: StudyProgramId,
+        val name: String
+): StudyProgramEvent(studyProgramId){
+    constructor(command: CreateStudyProgramCommand) : this(
+            studyProgramId = StudyProgramId(),
+            name = command.name
     )
 }

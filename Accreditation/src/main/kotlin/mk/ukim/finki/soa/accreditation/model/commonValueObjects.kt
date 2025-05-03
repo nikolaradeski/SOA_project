@@ -1,7 +1,6 @@
 package mk.ukim.finki.soa.accreditation.model
 
 import jakarta.persistence.MappedSuperclass
-import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgramDetails
 import java.io.Serializable
 
 @MappedSuperclass
