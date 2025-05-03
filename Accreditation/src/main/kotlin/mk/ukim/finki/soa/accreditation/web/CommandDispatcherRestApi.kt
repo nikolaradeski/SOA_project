@@ -1,8 +1,7 @@
 package mk.ukim.finki.soa.accreditation.web
 
 import io.swagger.v3.oas.annotations.Operation
-import mk.ukim.finki.soa.accreditation.model.CreateStudyProgramCommand
-import mk.ukim.finki.soa.accreditation.model.CreateStudyProgramCommandDTO
+import mk.ukim.finki.soa.accreditation.model.*
 import mk.ukim.finki.soa.accreditation.service.StudyProgramModificationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 //http://localhost:8080/swagger-ui/index.html
 @RestController
-@RequestMapping("/submitCommand")
+@RequestMapping("/studyProgram/submitCommand")
 class CommandDispatcherRestApi (
     val studyProgramModificationService: StudyProgramModificationService
 ) {
@@ -33,4 +32,96 @@ class CommandDispatcherRestApi (
                 studyProgramModificationService.createStudyProgram(commandDto)
         )
     }
+
+    @Operation(
+            summary = "Update the name of a study program",
+            description = "Changes the name attribute for the given study program. The english name should be send for updated as well"
+    )
+    @PostMapping("/UpdateStudyProgramNameCommand")
+    fun updateName(@RequestBody command: UpdateStudyProgramNameCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateName(command))
+    }
+
+    @Operation(
+            summary = "Update the duration (in years) of a study program",
+            description = "Changes the duration in years for the given study program."
+    )
+    @PostMapping("/UpdateStudyProgramDurationYearsCommand")
+    fun updateDurationYears(@RequestBody command: UpdateStudyProgramDurationYearsCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateDurationYears(command))
+    }
+
+    @Operation(
+            summary = "Update the order of a study program",
+            description = "Changes the display or ranking order of the study program."
+    )
+    @PostMapping("/UpdateStudyProgramOrderCommand")
+    fun updateOrder(@RequestBody command: UpdateStudyProgramOrderCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateOrder(command))
+    }
+
+    @Operation(
+            summary = "Update general information for a study program",
+            description = "Changes the general information or description of the study program."
+    )
+    @PostMapping("/UpdateStudyProgramGeneralInformationCommand")
+    fun updateGeneralInformation(@RequestBody command: UpdateStudyProgramGeneralInformationCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateGeneralInformation(command))
+    }
+
+    @Operation(
+            summary = "Update the graduation title of a study program",
+            description = "Changes the title students receive upon graduating from the study program. The english version should be sent as well"
+    )
+    @PostMapping("/UpdateStudyProgramGraduationTitleCommand")
+    fun updateGraduationTitle(@RequestBody command: UpdateStudyProgramGraduationTitleCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateGraduationTitle(command))
+    }
+
+
+    @Operation(
+            summary = "Update subject restrictions for a study program",
+            description = "Changes any subject-level restrictions for the study program."
+    )
+    @PostMapping("/UpdateStudyProgramSubjectRestrictionsCommand")
+    fun updateSubjectRestrictions(@RequestBody command: UpdateStudyProgramSubjectRestrictionsCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateSubjectRestrictions(command))
+    }
+
+    @Operation(
+            summary = "Toggle English availability of a study program",
+            description = "Updates whether the study program is available in English."
+    )
+    @PostMapping("/UpdateStudyProgramInEnglishCommand")
+    fun updateInEnglish(@RequestBody command: UpdateStudyProgramEnglishAvailabilityCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateInEnglish(command))
+    }
+
+    @Operation(
+            summary = "Update the study cycle of a program",
+            description = "Changes the study cycle (UNDERGRADUATE, MASTER, PHD) of the program."
+    )
+    @PostMapping("/UpdateStudyProgramCycleCommand")
+    fun updateStudyCycle(@RequestBody command: UpdateStudyProgramStudyCycleCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyCycle(command))
+    }
+
+    @Operation(
+            summary = "Update bilingual availability",
+            description = "Changes whether the study program is bilingual or not."
+    )
+    @PostMapping("/UpdateStudyProgramBilingualCommand")
+    fun updateBilingual(@RequestBody command: UpdateStudyProgramBilingualCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateBilingual(command))
+    }
+
+    @Operation(
+            summary = "Update the coordinator professor",
+            description = "Changes the professor ID responsible for coordinating the study program."
+    )
+    @PostMapping("/UpdateStudyProgramCoordinatorCommand")
+    fun updateCoordinator(@RequestBody command: UpdateStudyProgramCoordinatorCommand): ResponseEntity<Any> {
+        return ResponseEntity.ok(studyProgramModificationService.updateCoordinator(command))
+    }
+
 }
