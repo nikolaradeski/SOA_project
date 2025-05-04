@@ -1,10 +1,7 @@
 package mk.ukim.finki.soa.accreditation.model.study_program
 
 import jakarta.persistence.*
-import mk.ukim.finki.soa.accreditation.model.AccreditationId
-import mk.ukim.finki.soa.accreditation.model.CreateStudyProgramCommand
-import mk.ukim.finki.soa.accreditation.model.StudyProgramCreatedEvent
-import mk.ukim.finki.soa.accreditation.model.StudyProgramId
+import mk.ukim.finki.soa.accreditation.model.*
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
 import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import org.axonframework.commandhandling.CommandHandler
@@ -88,5 +85,120 @@ public class StudyProgram {
         this.bilingual = event.bilingual
         this.coordinator = event.coordinator
     }
+
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramNameCommand) {
+        val event = StudyProgramNameUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramNameUpdatedEvent) {
+        this.name = event.name
+        this.nameEn = event.nameEn
+    }
+
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramOrderCommand) {
+        val event = StudyProgramOrderUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramOrderUpdatedEvent) {
+        this.order = Order(event.order)
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramDurationYearsCommand) {
+        val event = StudyProgramDurationYearsUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramDurationYearsUpdatedEvent) {
+        this.durationYears = DurationYears(event.durationYears)
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramGeneralInformationCommand) {
+        val event = StudyProgramGeneralInformationUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramGeneralInformationUpdatedEvent) {
+        this.generalInformation = event.generalInformation
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramGraduationTitleCommand) {
+        val event = StudyProgramGraduationTitleUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramGraduationTitleUpdatedEvent) {
+        this.graduationTitle = event.graduationTitle
+        this.graduationTitleEn = event.graduationTitleEn
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramSubjectRestrictionsCommand) {
+        val event = StudyProgramSubjectRestrictionsUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramSubjectRestrictionsUpdatedEvent) {
+        this.subjectRestrictions = event.subjectRestrictions
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramEnglishAvailabilityCommand) {
+        val event = StudyProgramEnglishAvailabilityUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramEnglishAvailabilityUpdatedEvent) {
+        this.onEnglish = event.inEnglish
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramBilingualCommand) {
+        val event = StudyProgramBilingualUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramBilingualUpdatedEvent) {
+        this.bilingual = event.bilingual
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramCoordinatorCommand) {
+        val event = StudyProgramCoordinatorUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramCoordinatorUpdatedEvent) {
+        this.coordinator = event.coordinator
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramStudyCycleCommand) {
+        val event = StudyProgramStudyCycleUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramStudyCycleUpdatedEvent) {
+        this.studyCycle = event.studyCycle
+    }
+
 
 }
