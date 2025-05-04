@@ -16,3 +16,8 @@ interface StudyProgramModificationService {
     fun updateBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any>
     fun updateCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any>
 }
+
+interface StudyProgramViewReadService{
+    fun findById(studyProgramId: StudyProgramId): StudyProgramView
+    fun findAll(): List<StudyProgramView>
+}

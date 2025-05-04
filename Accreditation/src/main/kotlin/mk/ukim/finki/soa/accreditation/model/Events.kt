@@ -6,7 +6,7 @@ import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 abstract class AbstractEvent(open val identifier: Identifier<out Any>) {
 
 }
-
+/*------------------STUDY PROGRAM------------*/
 abstract class StudyProgramEvent(
         open val studyProgramId: StudyProgramId
 ) : AbstractEvent(studyProgramId)
@@ -152,3 +152,4 @@ data class StudyProgramSubjectRestrictionsUpdatedEvent(
             subjectRestrictions = command.subjectRestrictions
     )
 }
+/*------------------STUDY PROGRAM SUBJECT------------*/

@@ -3,6 +3,7 @@ package mk.ukim.finki.soa.accreditation.model
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
 import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
+/*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommandDTO(
         var code: String,
         var name: String,
@@ -20,3 +21,4 @@ data class CreateStudyProgramCommandDTO(
 
         var coordinator: ProfessorId
 )
+/*------------------STUDY PROGRAM SUBJECT------------*/

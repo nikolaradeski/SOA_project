@@ -4,6 +4,7 @@ import mk.ukim.finki.soa.accreditation.model.accreditation.Accreditation
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
 import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
+/*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommand(
         var code: String,
         var name: String,
@@ -87,3 +88,4 @@ data class UpdateStudyProgramSubjectRestrictionsCommand(
         val studyProgramId: StudyProgramId,
         val subjectRestrictions: String
 )
+/*------------------STUDY PROGRAM SUBJECT------------*/
