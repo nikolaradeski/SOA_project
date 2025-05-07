@@ -21,6 +21,58 @@ data class CreateStudyProgramCommandDTO(
 
         var coordinator: ProfessorId
 )
+
+data class UpdateStudyProgramNameCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val name: String,
+        val nameEn: String
+)
+
+data class UpdateStudyProgramOrderCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val order: Int
+)
+
+data class UpdateStudyProgramDurationYearsCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val durationYears: Int
+)
+
+data class UpdateStudyProgramGeneralInformationCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val generalInformation: String
+)
+
+data class UpdateStudyProgramGraduationTitleCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val graduationTitle: String,
+        val graduationTitleEn: String
+)
+
+data class UpdateStudyProgramEnglishAvailabilityCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val inEnglish: Boolean
+)
+
+data class UpdateStudyProgramBilingualCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val bilingual: Boolean
+)
+
+data class UpdateStudyProgramCoordinatorCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val coordinator: ProfessorId
+)
+
+data class UpdateStudyProgramStudyCycleCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val studyCycle: StudyCycle
+)
+
+data class UpdateStudyProgramSubjectRestrictionsCommandDTO(
+        val studyProgramId: StudyProgramId,
+        val subjectRestrictions: String
+)
 /*------------------STUDY PROGRAM SUBJECT------------*/
 data class CreateStudyProgramSubjectCommandDTO(
         var studyProgramCode: String,
@@ -29,4 +81,29 @@ data class CreateStudyProgramSubjectCommandDTO(
         var order: Float,
         var subjectGroup: String,
         var dependenciesOverride: String
+)
+
+data class UpdateStudyProgramSubjectMandatoryCommandDTO(
+        val studyProgramSubjectId: String,
+        val mandatory: Boolean
+)
+
+data class UpdateStudyProgramSubjectSemesterCommandDTO(
+        val studyProgramSubjectId: String,
+        val semester: Int
+)
+
+data class UpdateStudyProgramSubjectOrderCommandDTO(
+        val studyProgramSubjectId: String,
+        val order: Float
+)
+
+data class UpdateStudyProgramSubjectSubjectGroupCommandDTO(
+        val studyProgramSubjectId: String,
+        val subjectGroup: String
+)
+
+data class UpdateStudyProgramSubjectDependenciesOverrideCommandDTO(
+        val studyProgramSubjectId: String,
+        val dependenciesOverride: String
 )

@@ -53,5 +53,32 @@ class StudyProgramModificationServiceImpl(
     override fun updateCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any> {
         return commandGateway.send(command)
     }
+
+//-------------------------------------StudyProgramSubject-----------------------------------------------
+
+    override fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<StudyProgramSubjectId> {
+        return commandGateway.send(command);
+    }
+
+    override fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any> {
+        return commandGateway.send(command);
+    }
+
+    override fun updateSemester(command: UpdateStudyProgramSubjectSemesterCommand): CompletableFuture<Any> {
+        return commandGateway.send(command);
+    }
+
+    override fun updateOrder(command: UpdateStudyProgramSubjectOrderCommand): CompletableFuture<Any> {
+        return commandGateway.send(command);
+    }
+
+    override fun updateSubjectGroup(command: UpdateStudyProgramSubjectSubjectGroupCommand): CompletableFuture<Any> {
+        return commandGateway.send(command);
+    }
+
+    override fun updateDependenciesOverride(command: UpdateStudyProgramSubjectDependenciesOverrideCommand): CompletableFuture<Any> {
+        return commandGateway.send(command);
+    }
+
 }
 
