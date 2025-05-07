@@ -4,6 +4,7 @@ import mk.ukim.finki.soa.accreditation.model.accreditation.Accreditation
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
 import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
+/*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommand(
         var code: String,
         var name: String,
@@ -87,3 +88,43 @@ data class UpdateStudyProgramSubjectRestrictionsCommand(
         val studyProgramId: StudyProgramId,
         val subjectRestrictions: String
 )
+/*------------------STUDY PROGRAM SUBJECT------------*/
+
+data class CreateStudyProgramSubjectCommand(
+//        val studyProgramSubjectId: String,
+        val studyProgramCode: StudyProgramId,
+        val mandatory: Boolean,
+        val semester: Int,
+        val order: Float,
+        val subjectGroup: String,
+        val dependenciesOverride: String
+)
+
+data class UpdateStudyProgramSubjectMandatoryCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val mandatory: Boolean
+)
+
+data class UpdateStudyProgramSubjectSemesterCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val semester: Int
+)
+
+data class UpdateStudyProgramSubjectOrderCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val order: Float
+)
+
+data class UpdateStudyProgramSubjectSubjectGroupCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val subjectGroup: String
+)
+
+data class UpdateStudyProgramSubjectDependenciesOverrideCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val dependenciesOverride: String
+)
+
+
+
+

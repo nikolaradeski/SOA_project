@@ -15,4 +15,16 @@ interface StudyProgramModificationService {
     fun updateStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any>
     fun updateBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any>
     fun updateCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any>
+    /* ---------StudyProgramSubject-------*/
+    fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<StudyProgramSubjectId>
+    fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any>
+    fun updateSemester(command: UpdateStudyProgramSubjectSemesterCommand): CompletableFuture<Any>
+    fun updateOrder(command: UpdateStudyProgramSubjectOrderCommand): CompletableFuture<Any>
+    fun updateSubjectGroup(command: UpdateStudyProgramSubjectSubjectGroupCommand): CompletableFuture<Any>
+    fun updateDependenciesOverride(command: UpdateStudyProgramSubjectDependenciesOverrideCommand): CompletableFuture<Any>
+}
+
+interface StudyProgramViewReadService{
+    fun findById(studyProgramId: StudyProgramId): StudyProgramView
+    fun findAll(): List<StudyProgramView>
 }
