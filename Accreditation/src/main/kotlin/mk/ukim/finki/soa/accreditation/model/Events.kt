@@ -153,3 +153,78 @@ data class StudyProgramSubjectRestrictionsUpdatedEvent(
     )
 }
 /*------------------STUDY PROGRAM SUBJECT------------*/
+
+abstract class StudyProgramSubjectEvent(
+    open val studyProgramSubjectId: StudyProgramSubjectId
+) : AbstractEvent(studyProgramSubjectId)
+
+data class StudyProgramSubjectCreatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val studyProgramId: StudyProgramId,
+    val mandatory: Boolean,
+    val semester: Int,
+    val order: Float,
+    val subjectGroup: String,
+    val dependenciesOverride: String,
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+
+    constructor(command: CreateStudyProgramSubjectCommand) : this(
+        studyProgramSubjectId = StudyProgramSubjectId(),
+        studyProgramId = command.studyProgramCode,
+        mandatory = command.mandatory,
+        semester = command.semester,
+        order = command.order,
+        subjectGroup = command.subjectGroup,
+        dependenciesOverride = command.dependenciesOverride
+    )
+}
+
+data class StudyProgramSubjectMandatoryUpdatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val mandatory: Boolean
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+    constructor(command: UpdateStudyProgramSubjectMandatoryCommand) : this(
+        studyProgramSubjectId = command.studyProgramSubjectId,
+        mandatory = command.mandatory
+    )
+}
+
+data class StudyProgramSubjectSemesterUpdatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val semester: Int
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+    constructor(command: UpdateStudyProgramSubjectSemesterCommand) : this(
+        studyProgramSubjectId = command.studyProgramSubjectId,
+        semester = command.semester
+    )
+}
+
+data class StudyProgramSubjectOrderUpdatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val order: Float
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+    constructor(command: UpdateStudyProgramSubjectOrderCommand) : this(
+        studyProgramSubjectId = command.studyProgramSubjectId,
+        order = command.order
+    )
+}
+
+data class StudyProgramSubjectSubjectGroupUpdatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val subjectGroup: String
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+    constructor(command: UpdateStudyProgramSubjectSubjectGroupCommand) : this(
+        studyProgramSubjectId = command.studyProgramSubjectId,
+        subjectGroup = command.subjectGroup
+    )
+}
+
+data class StudyProgramSubjectDependenciesOverrideUpdatedEvent(
+    override val studyProgramSubjectId: StudyProgramSubjectId,
+    val dependenciesOverride: String
+) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+    constructor(command: UpdateStudyProgramSubjectDependenciesOverrideCommand) : this(
+        studyProgramSubjectId = command.studyProgramSubjectId,
+        dependenciesOverride = command.dependenciesOverride
+    )
+}

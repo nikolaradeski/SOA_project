@@ -89,3 +89,42 @@ data class UpdateStudyProgramSubjectRestrictionsCommand(
         val subjectRestrictions: String
 )
 /*------------------STUDY PROGRAM SUBJECT------------*/
+
+data class CreateStudyProgramSubjectCommand(
+//        val studyProgramSubjectId: String,
+        val studyProgramCode: StudyProgramId,
+        val mandatory: Boolean,
+        val semester: Int,
+        val order: Float,
+        val subjectGroup: String,
+        val dependenciesOverride: String
+)
+
+data class UpdateStudyProgramSubjectMandatoryCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val mandatory: Boolean
+)
+
+data class UpdateStudyProgramSubjectSemesterCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val semester: Int
+)
+
+data class UpdateStudyProgramSubjectOrderCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val order: Float
+)
+
+data class UpdateStudyProgramSubjectSubjectGroupCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val subjectGroup: String
+)
+
+data class UpdateStudyProgramSubjectDependenciesOverrideCommand(
+        val studyProgramSubjectId: StudyProgramSubjectId,
+        val dependenciesOverride: String
+)
+
+
+
+

@@ -22,3 +22,11 @@ data class CreateStudyProgramCommandDTO(
         var coordinator: ProfessorId
 )
 /*------------------STUDY PROGRAM SUBJECT------------*/
+data class CreateStudyProgramSubjectCommandDTO(
+        var studyProgramCode: String,
+        var mandatory: Boolean,
+        var semester: Int,
+        var order: Float,
+        var subjectGroup: String,
+        var dependenciesOverride: String
+)

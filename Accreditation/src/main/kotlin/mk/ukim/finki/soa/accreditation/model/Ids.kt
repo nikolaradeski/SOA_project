@@ -42,7 +42,7 @@ open class StudyProgramId(value: String) : Identifier<StudyProgram>(value, Study
 }
 
 @Embeddable
-internal class StudyProgramSubjectId(value: String) : Identifier<StudyProgramSubject>(value, StudyProgramSubject::class.java){
+open class StudyProgramSubjectId(value: String) : Identifier<StudyProgramSubject>(value, StudyProgramSubject::class.java){
     constructor() : this(UUID.randomUUID().toString())
 
     override fun equals(other: Any?): Boolean {
