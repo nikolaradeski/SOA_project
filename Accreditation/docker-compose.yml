@@ -19,6 +19,8 @@ services:
     depends_on:
       - broker
       - db
+    networks:
+      - study_program_accreditation_network
   broker:
     image: apache/kafka:latest
     container_name: kafka-broker
@@ -39,6 +41,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    networks:
+      - study_program_accreditation_network
   db:
     image: postgres:latest
     container_name: postgres-db
@@ -52,7 +56,13 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - study_program_accreditation_network
 
 volumes:
   pg_data:
     driver: local
+
+networks:
+  study_program_accreditation_network:
+    driver: bridge
