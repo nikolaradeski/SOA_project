@@ -13,7 +13,7 @@ import java.time.Duration
 
 @Entity
 @Aggregate(repository = "axonStudyProgramRepository")
-public class StudyProgram {
+public class StudyProgram : LabeledEntity {
 
     @AggregateIdentifier
     @EmbeddedId
@@ -44,7 +44,7 @@ public class StudyProgram {
     @Column(length = 8000)
     private var subjectRestrictions: String? = null
 
-    private var onEnglish: Boolean = false
+    private var inEnglish: Boolean = false
 
     @Enumerated(EnumType.STRING)
     private lateinit var studyCycle: StudyCycle
@@ -64,7 +64,22 @@ public class StudyProgram {
 
     @CommandHandler
     constructor(command: CreateStudyProgramCommand) {
-        val event = StudyProgramCreatedEvent(command)
+        val event = StudyProgramCreatedEvent(
+                studyProgramId = StudyProgramId(),
+                name = command.name,
+                nameEn = command.nameEn,
+                order = command.order,
+                durationYears = command.durationYears,
+                generalInformation = command.generalInformation,
+                graduationTitle = command.graduationTitle,
+                graduationTitleEn = command.graduationTitleEn,
+                subjectRestrictions = command.subjectRestrictions,
+                inEnglish = command.isItAvailableOnEnglish,
+                studyCycle = command.studyCycle,
+                accreditation = command.accreditation,
+                bilingual = command.bilingual,
+                coordinator = command.coordinator
+        )
         this.on(event)
         AggregateLifecycle.apply(event)
     }
@@ -79,7 +94,7 @@ public class StudyProgram {
         this.graduationTitle = event.graduationTitle
         this.graduationTitleEn = event.graduationTitleEn
         this.subjectRestrictions = event.subjectRestrictions
-        this.onEnglish = event.inEnglish
+        this.inEnglish = event.inEnglish
         this.studyCycle = event.studyCycle
         this.accreditation = event.accreditation
         this.bilingual = event.bilingual
@@ -96,9 +111,18 @@ public class StudyProgram {
 
     fun on(event: StudyProgramNameUpdatedEvent) {
         this.name = event.name
-        this.nameEn = event.nameEn
     }
 
+    @CommandHandler
+    fun handle(command: UpdateStudyProgramNameEnglishCommand) {
+        val event = StudyProgramNameEnglishUpdatedEvent(command)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: StudyProgramNameEnglishUpdatedEvent) {
+        this.nameEn = event.nameEn
+    }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramOrderCommand) {
@@ -164,7 +188,7 @@ public class StudyProgram {
     }
 
     fun on(event: StudyProgramEnglishAvailabilityUpdatedEvent) {
-        this.onEnglish = event.inEnglish
+        this.inEnglish = event.inEnglish
     }
 
     @CommandHandler
@@ -199,7 +223,32 @@ public class StudyProgram {
     fun on(event: StudyProgramStudyCycleUpdatedEvent) {
         this.studyCycle = event.studyCycle
     }
+    /*--------------STUDY PROGRAM SUBJECT--------*/
+    @CommandHandler
+    fun handle(command: CreateStudyProgramSubjectCommand) {
+        val event = StudyProgramSubjectCreatedEvent(
+                studyProgramSubjectId = StudyProgramSubjectId(),
+                studyProgramId = command.studyProgramCode,
+                mandatory = command.mandatory,
+                semester = command.semester,
+                order = command.order,
+                subjectGroup = command.subjectGroup,
+                dependenciesOverride = command.dependenciesOverride
+        )
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
 
+    fun on(event: StudyProgramSubjectCreatedEvent) {
 
+    }
+
+    override fun getId(): Identifier<out Any> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLabel(): String {
+        TODO("Not yet implemented")
+    }
 
 }

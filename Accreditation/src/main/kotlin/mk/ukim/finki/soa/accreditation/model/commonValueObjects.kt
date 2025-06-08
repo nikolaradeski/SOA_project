@@ -1,7 +1,9 @@
 package mk.ukim.finki.soa.accreditation.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.MappedSuperclass
 import java.io.Serializable
+import java.time.ZonedDateTime
 
 @MappedSuperclass
 abstract class Identifier<T>(providedValue: String, @Transient val entityClass: Class<T>) : Serializable {
@@ -30,3 +32,21 @@ abstract class Identifier<T>(providedValue: String, @Transient val entityClass: 
 
     override fun toString(): String = value
 }
+interface LabeledEntity {
+
+    @JsonProperty("id")
+    fun getId(): Identifier<out Any>
+
+    @JsonProperty("label")
+    fun getLabel(): String
+
+    @JsonProperty("entityType")
+    fun getEntityType(): String = this.javaClass.simpleName
+
+    @JsonProperty("dateCreated")
+    fun dateCreated(): ZonedDateTime? = null
+
+    @JsonProperty("archived")
+    fun isArchived(): Boolean = false
+}
+

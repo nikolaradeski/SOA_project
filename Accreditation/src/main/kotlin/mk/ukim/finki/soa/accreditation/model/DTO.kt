@@ -5,7 +5,6 @@ import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
 /*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommandDTO(
-        var code: String,
         var name: String,
         var nameEn: String,
         var order: Float,
@@ -13,18 +12,21 @@ data class CreateStudyProgramCommandDTO(
         var generalInformation: String,
         var graduationTitle: String,
         var graduationTitleEn: String,
-
+        var subjectRestrictions: String,
         var isItAvailableOnEnglish: Boolean,
+        var bilingual: Boolean,
         var studyCycle : StudyCycle,
-
         var accreditation: AccreditationId,
-
         var coordinator: ProfessorId
 )
 
 data class UpdateStudyProgramNameCommandDTO(
         val studyProgramId: StudyProgramId,
         val name: String,
+)
+
+data class UpdateStudyProgramNameEnglishCommandDTO(
+        val studyProgramId: StudyProgramId,
         val nameEn: String
 )
 

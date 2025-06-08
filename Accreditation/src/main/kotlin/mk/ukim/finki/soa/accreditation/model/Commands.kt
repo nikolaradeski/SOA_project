@@ -6,7 +6,6 @@ import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
 /*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommand(
-        var code: String,
         var name: String,
         var nameEn: String,
         var order: Int,
@@ -14,34 +13,24 @@ data class CreateStudyProgramCommand(
         var generalInformation: String,
         var graduationTitle: String,
         var graduationTitleEn: String,
-        var subjectRestrictions: String,
-
-
         //Subject Restrictions for??? Mozebi ke treba StudyProgramSubjectRestriction.
-
+        var subjectRestrictions: String,
         var isItAvailableOnEnglish: Boolean,
-        var bilingual: Boolean,
         var studyCycle : StudyCycle,
-
         var accreditation: AccreditationId,
-
+        var bilingual: Boolean,
         var coordinator: ProfessorId
-
-
-
-
-        ) {
-
-
-
-}
+        )
 
 data class UpdateStudyProgramNameCommand(
         val studyProgramId: StudyProgramId,
         val name: String,
-        val nameEn: String
 )
 
+data class UpdateStudyProgramNameEnglishCommand(
+        val studyProgramId: StudyProgramId,
+        val nameEn: String
+)
 
 data class UpdateStudyProgramOrderCommand(
         val studyProgramId: StudyProgramId,

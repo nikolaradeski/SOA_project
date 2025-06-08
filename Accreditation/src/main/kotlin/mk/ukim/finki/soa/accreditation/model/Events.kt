@@ -20,12 +20,13 @@ data class StudyProgramCreatedEvent(
         val generalInformation: String,
         val graduationTitle: String,
         val graduationTitleEn: String,
-        val inEnglish: Boolean,
-        val bilingual: Boolean,
-        val accreditation: AccreditationId,
-        val coordinator: ProfessorId,
-        val studyCycle: StudyCycle,
         val subjectRestrictions: String,
+        val inEnglish: Boolean,
+        val studyCycle: StudyCycle,
+        val accreditation: AccreditationId,
+        val bilingual: Boolean,
+        val coordinator: ProfessorId,
+
 
 
 ): StudyProgramEvent(studyProgramId){
@@ -51,11 +52,19 @@ data class StudyProgramCreatedEvent(
 data class StudyProgramNameUpdatedEvent(
         override val studyProgramId: StudyProgramId,
         val name: String,
-        val nameEn: String,
 ) : StudyProgramEvent(studyProgramId) {
     constructor(command: UpdateStudyProgramNameCommand) : this(
             studyProgramId = command.studyProgramId,
             name = command.name,
+    )
+}
+
+data class StudyProgramNameEnglishUpdatedEvent(
+        override val studyProgramId: StudyProgramId,
+        val nameEn: String,
+) : StudyProgramEvent(studyProgramId) {
+    constructor(command: UpdateStudyProgramNameEnglishCommand) : this(
+            studyProgramId = command.studyProgramId,
             nameEn = command.nameEn,
     )
 }

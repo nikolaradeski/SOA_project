@@ -5,16 +5,16 @@ import java.util.concurrent.CompletableFuture
 
 interface StudyProgramModificationService {
     fun createStudyProgram(command: CreateStudyProgramCommand): CompletableFuture<StudyProgramId>
-    fun updateName(command: UpdateStudyProgramNameCommand): CompletableFuture<Any>
-    fun updateDurationYears(command: UpdateStudyProgramDurationYearsCommand): CompletableFuture<Any>
-    fun updateOrder(command: UpdateStudyProgramOrderCommand): CompletableFuture<Any>
-    fun updateGeneralInformation(command: UpdateStudyProgramGeneralInformationCommand): CompletableFuture<Any>
-    fun updateGraduationTitle(command: UpdateStudyProgramGraduationTitleCommand): CompletableFuture<Any>
-    fun updateSubjectRestrictions(command: UpdateStudyProgramSubjectRestrictionsCommand): CompletableFuture<Any>
-    fun updateInEnglish(command: UpdateStudyProgramEnglishAvailabilityCommand): CompletableFuture<Any>
-    fun updateStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any>
-    fun updateBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any>
-    fun updateCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any>
+    fun updateStudyProgramName(command: UpdateStudyProgramNameCommand): CompletableFuture<Any>
+    fun updateStudyProgramDurationYears(command: UpdateStudyProgramDurationYearsCommand): CompletableFuture<Any>
+    fun updateStudyProgramOrder(command: UpdateStudyProgramOrderCommand): CompletableFuture<Any>
+    fun updateStudyProgramGeneralInformation(command: UpdateStudyProgramGeneralInformationCommand): CompletableFuture<Any>
+    fun updateStudyProgramGraduationTitle(command: UpdateStudyProgramGraduationTitleCommand): CompletableFuture<Any>
+    fun updateStudyProgramSubjectRestrictions(command: UpdateStudyProgramSubjectRestrictionsCommand): CompletableFuture<Any>
+    fun updateStudyProgramInEnglish(command: UpdateStudyProgramEnglishAvailabilityCommand): CompletableFuture<Any>
+    fun updateStudyProgramStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any>
+    fun updateStudyProgramBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any>
+    fun updateStudyProgramCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any>
     /* ---------StudyProgramSubject-------*/
     fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<StudyProgramSubjectId>
     fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any>

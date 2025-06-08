@@ -1,6 +1,7 @@
 package mk.ukim.finki.soa.accreditation.web
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import mk.ukim.finki.soa.accreditation.model.*
 import mk.ukim.finki.soa.accreditation.service.StudyProgramModificationService
 import org.springframework.http.ResponseEntity
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController
 //http://localhost:8080/swagger-ui/index.html
 @RestController
 @RequestMapping("/studyProgram/submitCommand")
+@Tag(
+        name = "Study Program Command API",
+        description = "Handles commands for creating and modifying study programs."
+)
 class CommandDispatcherRestApi (
     val studyProgramModificationService: StudyProgramModificationService
 ) {
@@ -39,7 +44,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramNameCommand")
     fun updateName(@RequestBody command: UpdateStudyProgramNameCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateName(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramName(command))
     }
 
     @Operation(
@@ -48,7 +53,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramDurationYearsCommand")
     fun updateDurationYears(@RequestBody command: UpdateStudyProgramDurationYearsCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateDurationYears(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramDurationYears(command))
     }
 
     @Operation(
@@ -57,7 +62,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramOrderCommand")
     fun updateOrder(@RequestBody command: UpdateStudyProgramOrderCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateOrder(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramOrder(command))
     }
 
     @Operation(
@@ -66,7 +71,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramGeneralInformationCommand")
     fun updateGeneralInformation(@RequestBody command: UpdateStudyProgramGeneralInformationCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateGeneralInformation(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramGeneralInformation(command))
     }
 
     @Operation(
@@ -75,7 +80,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramGraduationTitleCommand")
     fun updateGraduationTitle(@RequestBody command: UpdateStudyProgramGraduationTitleCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateGraduationTitle(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramGraduationTitle(command))
     }
 
 
@@ -85,7 +90,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramSubjectRestrictionsCommand")
     fun updateSubjectRestrictions(@RequestBody command: UpdateStudyProgramSubjectRestrictionsCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateSubjectRestrictions(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramSubjectRestrictions(command))
     }
 
     @Operation(
@@ -94,7 +99,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramInEnglishCommand")
     fun updateInEnglish(@RequestBody command: UpdateStudyProgramEnglishAvailabilityCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateInEnglish(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramInEnglish(command))
     }
 
     @Operation(
@@ -103,7 +108,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramCycleCommand")
     fun updateStudyCycle(@RequestBody command: UpdateStudyProgramStudyCycleCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateStudyCycle(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramStudyCycle(command))
     }
 
     @Operation(
@@ -112,7 +117,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramBilingualCommand")
     fun updateBilingual(@RequestBody command: UpdateStudyProgramBilingualCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateBilingual(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramBilingual(command))
     }
 
     @Operation(
@@ -121,7 +126,7 @@ class CommandDispatcherRestApi (
     )
     @PostMapping("/UpdateStudyProgramCoordinatorCommand")
     fun updateCoordinator(@RequestBody command: UpdateStudyProgramCoordinatorCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateCoordinator(command))
+        return ResponseEntity.ok(studyProgramModificationService.updateStudyProgramCoordinator(command))
     }
 
     //----------------------------StudyProgramSubject----------------------------------

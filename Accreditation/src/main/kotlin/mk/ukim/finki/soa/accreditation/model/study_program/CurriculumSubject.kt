@@ -2,21 +2,22 @@ package mk.ukim.finki.soa.accreditation.model.study_program
 
 import jakarta.persistence.*
 import mk.ukim.finki.soa.accreditation.model.*
-import mk.ukim.finki.soa.accreditation.model.subject.Subject
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateLifecycle
 
 @Entity
-public class StudyProgramSubject {
+public class CurriculumSubject {
     @EmbeddedId
     @AttributeOverride(name = "value", column = Column(name = "id"))
     private lateinit var id: StudyProgramSubjectId
 
-    //@ManyToOne
-    //private val subject: Subject? = null
+    @EmbeddedId
+    @AttributeOverride(name = "value", column = Column(name = "study_program"))
+    private lateinit var studyProgram: StudyProgramId
 
-    @ManyToOne
-    private val studyProgram: StudyProgram? = null
+    @EmbeddedId
+    @AttributeOverride(name = "value", column = Column(name = "subject"))
+    private lateinit var subject: SubjectId
 
     private var mandatory: Boolean? = null
 
@@ -30,22 +31,18 @@ public class StudyProgramSubject {
     @Column(length = 5000)
     private var dependenciesOverride: String? = null
 
-    @CommandHandler
-    constructor(command: CreateStudyProgramSubjectCommand) {
-        val event = StudyProgramSubjectCreatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
-    }
-
-    fun on(event: StudyProgramSubjectCreatedEvent) {
-        // this.subject = ???
-        // nekoj neka proveri ovde da ne treba neso za studyProgram
+    //tuka fali subject
+    constructor(event: StudyProgramSubjectCreatedEvent) {
+        this.id = event.studyProgramSubjectId
+        this.studyProgram = event.studyProgramId
         this.mandatory = event.mandatory
         this.semester = event.semester
         this.order = event.order
         this.subjectGroup = event.subjectGroup
         this.dependenciesOverride = event.dependenciesOverride
     }
+
+
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramSubjectMandatoryCommand) {
