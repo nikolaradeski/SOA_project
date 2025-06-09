@@ -1,0 +1,54 @@
+services:
+  accreditation_db:
+    image: postgres:16.1
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: accreditation
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    container_name: accreditation_db
+    networks:
+      - accreditation_net
+
+  consul:
+    image: hashicorp/consul
+    container_name: dev-consul
+    ports:
+      - "8500:8500"
+    networks:
+      - accreditation_net
+
+  accreditation_backend:
+    depends_on:
+      - accreditation_db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: accreditation_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://accreditation_db:5432/accreditation
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_SCHEMA: public
+      OPTIMIZE_EVENT_CONSUMPTION: "false"
+      SPRING_CLOUD_CONSUL_HOST: dev-consul
+      SPRING_CLOUD_DISCOVERY_HOSTNAME: accreditation_backend
+      SPRING_CLOUD_DISCOVERY_PREFER_IP_ADDRESS: "false"
+    networks:
+      - accreditation_net
+
+volumes:
+  db-data:
+
+networks:
+  accreditation_net:
+    name: accreditation_net
+    driver: bridge
