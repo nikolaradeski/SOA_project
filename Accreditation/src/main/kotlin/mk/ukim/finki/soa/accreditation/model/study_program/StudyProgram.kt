@@ -3,12 +3,10 @@ package mk.ukim.finki.soa.accreditation.model.study_program
 import jakarta.persistence.*
 import mk.ukim.finki.soa.accreditation.model.*
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
-import java.time.Duration
 
 
 @Entity

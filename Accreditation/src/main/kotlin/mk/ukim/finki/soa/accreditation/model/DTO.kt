@@ -1,7 +1,6 @@
 package mk.ukim.finki.soa.accreditation.model
 
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 
 /*------------------STUDY PROGRAM------------*/
 data class CreateStudyProgramCommandDTO(
@@ -109,3 +108,11 @@ data class UpdateStudyProgramSubjectDependenciesOverrideCommandDTO(
         val studyProgramSubjectId: String,
         val dependenciesOverride: String
 )
+/*------------------STUDY PROGRAM SUBJECT------------*/
+
+data class SubjectCreatedExternalEvent(
+        val code: SubjectId,
+        val name: String,
+        val credits: Float?,
+)
+

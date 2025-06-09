@@ -1,8 +1,6 @@
 package mk.ukim.finki.soa.accreditation.model
 
-import mk.ukim.finki.soa.accreditation.model.accreditation.Accreditation
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectBibliography
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectDependencies
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectGrading

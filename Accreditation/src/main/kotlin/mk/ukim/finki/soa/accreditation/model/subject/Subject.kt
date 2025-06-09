@@ -5,6 +5,7 @@ import mk.ukim.finki.soa.accreditation.model.*
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.spring.stereotype.Aggregate
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
+import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorInformation
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateLifecycle
 
@@ -20,6 +21,16 @@ public class Subject {
 
     @Enumerated(EnumType.STRING)
     private var semester: Int? = null
+
+    //@ElementCollection
+    //@CollectionTable(
+      //  name = "subject_professors",
+       // joinColumns = [JoinColumn(name = "subject_code")]
+    //)
+    //@OneToMany
+    //var professors: List<ProfessorInformation> = mutableListOf()
+    @ElementCollection
+    var professors: MutableList<ProfessorId> = mutableListOf()
 
     private var weeklyLecturesClasses: Int? = null
 

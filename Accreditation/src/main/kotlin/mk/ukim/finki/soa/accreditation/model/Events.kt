@@ -1,13 +1,24 @@
 package mk.ukim.finki.soa.accreditation.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectBibliography
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectDependencies
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectGrading
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectObligationDuration
 
 abstract class AbstractEvent(open val identifier: Identifier<out Any>) {
+    @JsonProperty("_eventType")
+    fun eventType(): String = this.javaClass.simpleName
+
+    //ova kje raboti samo za Subject, nema za StudyProgram
+    @JsonIgnore
+    fun eventTopic(): String =
+        this.javaClass.simpleName.removeSuffix("Event").replace(Regex("([a-z])([A-Z])"), "$1.$2").lowercase()
+
+    @JsonIgnore
+    open fun toExternalEvent(): Any? = null
 
 }
 /*------------------STUDY PROGRAM------------*/
@@ -301,6 +312,14 @@ data class SubjectCreatedEvent(
         bibliography = command.bibliography,
         notes = command.notes
     )
+
+    override fun toExternalEvent(): SubjectCreatedExternalEvent {
+        return SubjectCreatedExternalEvent(
+            code = this.subjectId,
+            name = this.name,
+            credits = this.credits,
+        )
+    }
 }
 
 data class SubjectNameUpdatedEvent(
