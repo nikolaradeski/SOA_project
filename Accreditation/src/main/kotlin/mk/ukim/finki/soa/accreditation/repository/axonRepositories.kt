@@ -29,6 +29,7 @@ class AxonRepositoriesConfiguration(@PersistenceContext val entityManager: Entit
                 .build()
     }
 
+
     @Bean("axonSubjectRepository")
     fun subjectGenericJpaRepository(
         eventBus: EventBus,
@@ -41,5 +42,6 @@ class AxonRepositoriesConfiguration(@PersistenceContext val entityManager: Entit
             .identifierConverter { SubjectId(it) }
             .build()
     }
+
 
 }
