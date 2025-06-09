@@ -36,9 +36,12 @@ data class CreateStudyProgramCommand(
 data class UpdateStudyProgramNameCommand(
         val studyProgramId: StudyProgramId,
         val name: String,
-        val nameEn: String
 )
 
+data class UpdateStudyProgramNameEnCommand(
+        val studyProgramId: StudyProgramId,
+        val nameEn: String
+)
 
 data class UpdateStudyProgramOrderCommand(
         val studyProgramId: StudyProgramId,

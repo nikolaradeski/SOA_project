@@ -55,12 +55,20 @@ data class StudyProgramCreatedEvent(
 data class StudyProgramNameUpdatedEvent(
         override val studyProgramId: StudyProgramId,
         val name: String,
-        val nameEn: String,
 ) : StudyProgramEvent(studyProgramId) {
     constructor(command: UpdateStudyProgramNameCommand) : this(
             studyProgramId = command.studyProgramId,
             name = command.name,
-            nameEn = command.nameEn,
+    )
+}
+
+data class StudyProgramNameEnUpdatedEvent(
+    override val studyProgramId: StudyProgramId,
+    val nameEn: String,
+) : StudyProgramEvent(studyProgramId) {
+    constructor(command: UpdateStudyProgramNameEnCommand) : this(
+        studyProgramId = command.studyProgramId,
+        nameEn = command.nameEn,
     )
 }
 

@@ -114,13 +114,13 @@ public class StudyProgram : LabeledEntity {
     }
 
     @CommandHandler
-    fun handle(command: UpdateStudyProgramNameEnglishCommand) {
-        val event = StudyProgramNameEnglishUpdatedEvent(command)
+    fun handle(command: UpdateStudyProgramNameEnCommand) {
+        val event = StudyProgramNameEnUpdatedEvent(command)
         this.on(event)
         AggregateLifecycle.apply(event)
     }
 
-    fun on(event: StudyProgramNameEnglishUpdatedEvent) {
+    fun on(event: StudyProgramNameEnUpdatedEvent) {
         this.nameEn = event.nameEn
     }
 

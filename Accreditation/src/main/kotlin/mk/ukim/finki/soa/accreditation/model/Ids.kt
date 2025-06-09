@@ -77,7 +77,7 @@ internal class DocumentId(value: String) : Identifier<Document>(value, Document:
 }
 
 @Embeddable
-internal class SubjectId(value: String) : Identifier<Subject>(value, Subject::class.java){
+open class SubjectId(value: String) : Identifier<Subject>(value, Subject::class.java){
     constructor() : this(UUID.randomUUID().toString())
 
     override fun equals(other: Any?): Boolean {
