@@ -81,9 +81,42 @@ public class Subject {
     @ElementCollection
     private var notes: List<String>? = null
 
+//    @CommandHandler
+//    constructor(command: CreateSubjectCommand) {
+//        val event = SubjectCreatedEvent(command)
+//        this.on(event)
+//        AggregateLifecycle.apply(event)
+//    }
+
     @CommandHandler
     constructor(command: CreateSubjectCommand) {
-        val event = SubjectCreatedEvent(command)
+        val event = SubjectCreatedEvent(
+            subjectId = SubjectId(),
+            name = command.name,
+            abbreviation = command.abbreviation,
+            semester = command.semester,
+            weeklyLecturesClasses = command.weeklyLecturesClasses,
+            weeklyAuditoriumClasses = command.weeklyAuditoriumClasses,
+            weeklyLabClasses = command.weeklyLabClasses,
+            placeholder = command.placeholder,
+            nameEn = command.nameEn,
+            defaultSemester = command.defaultSemester,
+            credits = command.credits,
+            studyCycle = command.studyCycle,
+            language = command.language,
+            learningMethods = command.learningMethods,
+            goalsDescription = command.goalsDescription,
+            content = command.content,
+            goalsDescriptionEn = command.goalsDescriptionEn,
+            contentEn = command.contentEn,
+            qualityControl = command.qualityControl,
+            accreditation = command.accreditation,
+            obligationDuration = command.obligationDuration,
+            dependencies = command.dependencies,
+            grading = command.grading,
+            bibliography = command.bibliography,
+            notes = command.notes
+        )
         this.on(event)
         AggregateLifecycle.apply(event)
     }
@@ -116,100 +149,354 @@ public class Subject {
         this.notes = event.notes
     }
 
-    fun updateName(value: String) {
-        this.name = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectNameCommand) {
+        val event = SubjectNameUpdatedEvent(command.subjectId, command.name, command.nameEn)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateAbbreviation(value: String) {
-        this.abbreviation = value
+    fun on(event: SubjectNameUpdatedEvent) {
+        this.name = event.name
+        this.nameEn = event.nameEn
     }
 
-    fun updateSemester(value: Int?) {
-        this.semester = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectAbbreviationCommand) {
+        val event = SubjectAbbreviationUpdatedEvent(command.subjectId, command.abbreviation)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateWeeklyLecturesClasses(value: Int?) {
-        this.weeklyLecturesClasses = value
+    fun on(event: SubjectAbbreviationUpdatedEvent) {
+        this.abbreviation = event.abbreviation
     }
 
-    fun updateWeeklyAuditoriumClasses(value: Int?) {
-        this.weeklyAuditoriumClasses = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectSemesterCommand) {
+        val event = SubjectSemesterUpdatedEvent(command.subjectId, command.semester)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateWeeklyLabClasses(value: Int?) {
-        this.weeklyLabClasses = value
+    fun on(event: SubjectSemesterUpdatedEvent) {
+        this.semester = event.semester
     }
 
-    fun updatePlaceholder(value: Boolean?) {
-        this.placeholder = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectWeeklyLecturesClassesCommand) {
+        val event = SubjectWeeklyLecturesUpdatedEvent(command.subjectId, command.weeklyLecturesClasses)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateNameEn(value: String?) {
-        this.nameEn = value
+    fun on(event: SubjectWeeklyLecturesUpdatedEvent) {
+        this.weeklyLecturesClasses = event.weeklyLecturesClasses
     }
 
-    fun updateDefaultSemester(value: Short?) {
-        this.defaultSemester = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectWeeklyAuditoriumClassesCommand) {
+        val event = SubjectWeeklyAuditoriumUpdatedEvent(command.subjectId, command.weeklyAuditoriumClasses)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateCredits(value: Float?) {
-        this.credits = value
+    fun on(event: SubjectWeeklyAuditoriumUpdatedEvent) {
+        this.weeklyAuditoriumClasses = event.weeklyAuditoriumClasses
     }
 
-    fun updateStudyCycle(value: StudyCycle) {
-        this.studyCycle = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectWeeklyLabClassesCommand) {
+        val event = SubjectWeeklyLabUpdatedEvent(command.subjectId, command.weeklyLabClasses)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateLanguage(value: String?) {
-        this.language = value
+    fun on(event: SubjectWeeklyLabUpdatedEvent) {
+        this.weeklyLabClasses = event.weeklyLabClasses
     }
 
-    fun updateLearningMethods(value: String?) {
-        this.learningMethods = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectPlaceholderCommand) {
+        val event = SubjectPlaceholderUpdatedEvent(command.subjectId, command.placeholder)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateGoalsDescription(value: String?) {
-        this.goalsDescription = value
+    fun on(event: SubjectPlaceholderUpdatedEvent) {
+        this.placeholder = event.placeholder
     }
 
-    fun updateContent(value: String?) {
-        this.content = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectDefaultSemesterCommand) {
+        val event = SubjectDefaultSemesterUpdatedEvent(command.subjectId, command.defaultSemester)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateGoalsDescriptionEn(value: String?) {
-        this.goalsDescriptionEn = value
+    fun on(event: SubjectDefaultSemesterUpdatedEvent) {
+        this.defaultSemester = event.defaultSemester
     }
 
-    fun updateContentEn(value: String?) {
-        this.contentEn = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectCreditsCommand) {
+        val event = SubjectCreditsUpdatedEvent(command.subjectId, command.credits)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateQualityControl(value: String?) {
-        this.qualityControl = value
+    fun on(event: SubjectCreditsUpdatedEvent) {
+        this.credits = event.credits
     }
 
-    fun updateAccreditation(value: AccreditationId) {
-        this.accreditation = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectStudyCycleCommand) {
+        val event = SubjectStudyCycleUpdatedEvent(command.subjectId, command.studyCycle)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateObligationDuration(value: SubjectObligationDuration?) {
-        this.obligationDuration = value
+    fun on(event: SubjectStudyCycleUpdatedEvent) {
+        this.studyCycle = event.studyCycle
     }
 
-    fun updateDependencies(value: SubjectDependencies?) {
-        this.dependencies = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectLanguageCommand) {
+        val event = SubjectLanguageUpdatedEvent(command.subjectId, command.language)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateGrading(value: SubjectGrading?) {
-        this.grading = value
+    fun on(event: SubjectLanguageUpdatedEvent) {
+        this.language = event.language
     }
 
-    fun updateBibliography(value: SubjectBibliography?) {
-        this.bibliography = value
+    @CommandHandler
+    fun handle(command: UpdateSubjectLearningMethodsCommand) {
+        val event = SubjectLearningMethodsUpdatedEvent(command.subjectId, command.learningMethods)
+        this.on(event)
+        AggregateLifecycle.apply(event)
     }
 
-    fun updateNotes(value: List<String>?) {
-        this.notes = value
+    fun on(event: SubjectLearningMethodsUpdatedEvent) {
+        this.learningMethods = event.learningMethods
     }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectGoalsDescriptionCommand) {
+        val event = SubjectGoalsDescriptionUpdatedEvent(command.subjectId, command.goalsDescription)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectGoalsDescriptionUpdatedEvent) {
+        this.goalsDescription = event.goalsDescription
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectContentCommand) {
+        val event = SubjectContentUpdatedEvent(command.subjectId, command.content)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectContentUpdatedEvent) {
+        this.content = event.content
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectGoalsDescriptionEnCommand) {
+        val event = SubjectGoalsDescriptionEnUpdatedEvent(command.subjectId, command.goalsDescriptionEn)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectGoalsDescriptionEnUpdatedEvent) {
+        this.goalsDescriptionEn = event.goalsDescriptionEn
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectContentEnCommand) {
+        val event = SubjectContentEnUpdatedEvent(command.subjectId, command.contentEn)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectContentEnUpdatedEvent) {
+        this.contentEn = event.contentEn
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectQualityControlCommand) {
+        val event = SubjectQualityControlUpdatedEvent(command.subjectId, command.qualityControl)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectQualityControlUpdatedEvent) {
+        this.qualityControl = event.qualityControl
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectAccreditationCommand) {
+        val event = SubjectAccreditationUpdatedEvent(command.subjectId, command.accreditation)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectAccreditationUpdatedEvent) {
+        this.accreditation = event.accreditation
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectObligationDurationCommand) {
+        val event = SubjectObligationDurationUpdatedEvent(command.subjectId, command.obligationDuration)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectObligationDurationUpdatedEvent) {
+        this.obligationDuration = event.obligationDuration
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectDependenciesCommand) {
+        val event = SubjectDependenciesUpdatedEvent(command.subjectId, command.dependencies)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectDependenciesUpdatedEvent) {
+        this.dependencies = event.dependencies
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectGradingCommand) {
+        val event = SubjectGradingUpdatedEvent(command.subjectId, command.grading)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectGradingUpdatedEvent) {
+        this.grading = event.grading
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectBibliographyCommand) {
+        val event = SubjectBibliographyUpdatedEvent(command.subjectId, command.bibliography)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectBibliographyUpdatedEvent) {
+        this.bibliography = event.bibliography
+    }
+
+    @CommandHandler
+    fun handle(command: UpdateSubjectNotesCommand) {
+        val event = SubjectNotesUpdatedEvent(command.subjectId, command.notes)
+        this.on(event)
+        AggregateLifecycle.apply(event)
+    }
+
+    fun on(event: SubjectNotesUpdatedEvent) {
+        this.notes = event.notes
+    }
+//
+//    fun updateName(value: String) {
+//        this.name = value
+//    }
+//
+//    fun updateAbbreviation(value: String) {
+//        this.abbreviation = value
+//    }
+//
+//    fun updateSemester(value: Int?) {
+//        this.semester = value
+//    }
+//
+//    fun updateWeeklyLecturesClasses(value: Int?) {
+//        this.weeklyLecturesClasses = value
+//    }
+//
+//    fun updateWeeklyAuditoriumClasses(value: Int?) {
+//        this.weeklyAuditoriumClasses = value
+//    }
+//
+//    fun updateWeeklyLabClasses(value: Int?) {
+//        this.weeklyLabClasses = value
+//    }
+//
+//    fun updatePlaceholder(value: Boolean?) {
+//        this.placeholder = value
+//    }
+//
+//    fun updateNameEn(value: String?) {
+//        this.nameEn = value
+//    }
+//
+//    fun updateDefaultSemester(value: Short?) {
+//        this.defaultSemester = value
+//    }
+//
+//    fun updateCredits(value: Float?) {
+//        this.credits = value
+//    }
+//
+//    fun updateStudyCycle(value: StudyCycle) {
+//        this.studyCycle = value
+//    }
+//
+//    fun updateLanguage(value: String?) {
+//        this.language = value
+//    }
+//
+//    fun updateLearningMethods(value: String?) {
+//        this.learningMethods = value
+//    }
+//
+//    fun updateGoalsDescription(value: String?) {
+//        this.goalsDescription = value
+//    }
+//
+//    fun updateContent(value: String?) {
+//        this.content = value
+//    }
+//
+//    fun updateGoalsDescriptionEn(value: String?) {
+//        this.goalsDescriptionEn = value
+//    }
+//
+//    fun updateContentEn(value: String?) {
+//        this.contentEn = value
+//    }
+//
+//    fun updateQualityControl(value: String?) {
+//        this.qualityControl = value
+//    }
+//
+//    fun updateAccreditation(value: AccreditationId) {
+//        this.accreditation = value
+//    }
+//
+//    fun updateObligationDuration(value: SubjectObligationDuration?) {
+//        this.obligationDuration = value
+//    }
+//
+//    fun updateDependencies(value: SubjectDependencies?) {
+//        this.dependencies = value
+//    }
+//
+//    fun updateGrading(value: SubjectGrading?) {
+//        this.grading = value
+//    }
+//
+//    fun updateBibliography(value: SubjectBibliography?) {
+//        this.bibliography = value
+//    }
+//
+//    fun updateNotes(value: List<String>?) {
+//        this.notes = value
+//    }
 
 }
