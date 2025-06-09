@@ -26,5 +26,4 @@ class AxonRepositoriesConfiguration(@PersistenceContext val entityManager: Entit
                 .identifierConverter { StudyProgramId(it) }
                 .build()
     }
-
 }
