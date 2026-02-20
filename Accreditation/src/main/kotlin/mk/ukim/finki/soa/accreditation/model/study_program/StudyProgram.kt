@@ -3,17 +3,16 @@ package mk.ukim.finki.soa.accreditation.model.study_program
 import jakarta.persistence.*
 import mk.ukim.finki.soa.accreditation.model.*
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import org.axonframework.commandhandling.CommandHandler
+import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
-import java.time.Duration
-
 
 @Entity
+@Table(name = "study_program")
 @Aggregate(repository = "axonStudyProgramRepository")
-public class StudyProgram : LabeledEntity {
+class StudyProgram : LabeledEntity {
 
     @AggregateIdentifier
     @EmbeddedId
@@ -21,7 +20,6 @@ public class StudyProgram : LabeledEntity {
     private lateinit var code: StudyProgramId
 
     private lateinit var name: String
-
     private lateinit var nameEn: String
 
     @Embedded
@@ -30,7 +28,7 @@ public class StudyProgram : LabeledEntity {
 
     @Embedded
     @AttributeOverride(name = "durationYears", column = Column(name = "duration_years"))
-    private var durationYears: DurationYears? = null;
+    private var durationYears: DurationYears? = null
 
     @Column(length = 8000)
     private var generalInformation: String? = null
@@ -51,49 +49,31 @@ public class StudyProgram : LabeledEntity {
 
     @Embedded
     @AttributeOverride(name = "value", column = Column(name = "accreditation_id"))
-    private lateinit var accreditation: AccreditationId;
+    private lateinit var accreditation: AccreditationId
 
     private var bilingual: Boolean = false
-
-    //@ElementCollection
-    //private var fields: List<AccreditationDescriptiveField> = emptyList()
 
     @Embedded
     @AttributeOverride(name = "value", column = Column(name = "professor_id"))
     private var coordinator: ProfessorId? = null
 
-    @CommandHandler
-    constructor(command: CreateStudyProgramCommand) {
-        val event = StudyProgramCreatedEvent(
-                studyProgramId = StudyProgramId(),
-                name = command.name,
-                nameEn = command.nameEn,
-                order = command.order,
-                durationYears = command.durationYears,
-                generalInformation = command.generalInformation,
-                graduationTitle = command.graduationTitle,
-                graduationTitleEn = command.graduationTitleEn,
-                subjectRestrictions = command.subjectRestrictions,
-                inEnglish = command.isItAvailableOnEnglish,
-                studyCycle = command.studyCycle,
-                accreditation = command.accreditation,
-                bilingual = command.bilingual,
-                coordinator = command.coordinator
-        )
-        this.on(event)
-        AggregateLifecycle.apply(event)
-    }
+    // JPA needs no-arg constructor
+    protected constructor()
 
+    @EventSourcingHandler
     fun on(event: StudyProgramCreatedEvent) {
         this.code = event.studyProgramId
         this.name = event.name
         this.nameEn = event.nameEn
+
         this.order = Order(event.order)
         this.durationYears = DurationYears(event.durationYears)
+
         this.generalInformation = event.generalInformation
         this.graduationTitle = event.graduationTitle
         this.graduationTitleEn = event.graduationTitleEn
         this.subjectRestrictions = event.subjectRestrictions
+
         this.inEnglish = event.inEnglish
         this.studyCycle = event.studyCycle
         this.accreditation = event.accreditation
@@ -101,69 +81,79 @@ public class StudyProgram : LabeledEntity {
         this.coordinator = event.coordinator
     }
 
+    @CommandHandler
+    constructor(command: CreateStudyProgramCommand) {
+        require(command.code.isNotBlank()) { "StudyProgram code must not be blank" }
+
+        // these are nullable now -> validate here OR let the event constructor validate
+        require(!command.name.isNullOrBlank()) { "StudyProgram name must not be blank" }
+        require(!command.nameEn.isNullOrBlank()) { "StudyProgram nameEn must not be blank" }
+        require(command.durationYears != null && command.durationYears!! > 0) { "durationYears must be > 0" }
+        require(command.order != null) { "order is required" }
+
+        AggregateLifecycle.apply(StudyProgramCreatedEvent(command))
+    }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramNameCommand) {
-        val event = StudyProgramNameUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        require(command.name.isNotBlank()) { "Name must not be blank" }
+        AggregateLifecycle.apply(StudyProgramNameUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramNameUpdatedEvent) {
         this.name = event.name
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramNameEnCommand) {
-        val event = StudyProgramNameEnUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        require(command.nameEn.isNotBlank()) { "English name must not be blank" }
+        AggregateLifecycle.apply(StudyProgramNameEnUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramNameEnUpdatedEvent) {
         this.nameEn = event.nameEn
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramOrderCommand) {
-        val event = StudyProgramOrderUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        require(command.order > 0) { "Order must be > 0" }
+        AggregateLifecycle.apply(StudyProgramOrderUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramOrderUpdatedEvent) {
         this.order = Order(event.order)
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramDurationYearsCommand) {
-        val event = StudyProgramDurationYearsUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        require(command.durationYears > 0) { "durationYears must be > 0" }
+        AggregateLifecycle.apply(StudyProgramDurationYearsUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramDurationYearsUpdatedEvent) {
         this.durationYears = DurationYears(event.durationYears)
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramGeneralInformationCommand) {
-        val event = StudyProgramGeneralInformationUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramGeneralInformationUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramGeneralInformationUpdatedEvent) {
         this.generalInformation = event.generalInformation
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramGraduationTitleCommand) {
-        val event = StudyProgramGraduationTitleUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramGraduationTitleUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramGraduationTitleUpdatedEvent) {
         this.graduationTitle = event.graduationTitle
         this.graduationTitleEn = event.graduationTitleEn
@@ -171,84 +161,54 @@ public class StudyProgram : LabeledEntity {
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramSubjectRestrictionsCommand) {
-        val event = StudyProgramSubjectRestrictionsUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramSubjectRestrictionsUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramSubjectRestrictionsUpdatedEvent) {
         this.subjectRestrictions = event.subjectRestrictions
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramEnglishAvailabilityCommand) {
-        val event = StudyProgramEnglishAvailabilityUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramEnglishAvailabilityUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramEnglishAvailabilityUpdatedEvent) {
         this.inEnglish = event.inEnglish
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramBilingualCommand) {
-        val event = StudyProgramBilingualUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramBilingualUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramBilingualUpdatedEvent) {
         this.bilingual = event.bilingual
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramCoordinatorCommand) {
-        val event = StudyProgramCoordinatorUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramCoordinatorUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramCoordinatorUpdatedEvent) {
         this.coordinator = event.coordinator
     }
 
     @CommandHandler
     fun handle(command: UpdateStudyProgramStudyCycleCommand) {
-        val event = StudyProgramStudyCycleUpdatedEvent(command)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(StudyProgramStudyCycleUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: StudyProgramStudyCycleUpdatedEvent) {
         this.studyCycle = event.studyCycle
     }
-    /*--------------STUDY PROGRAM SUBJECT--------*/
-    @CommandHandler
-    fun handle(command: CreateStudyProgramSubjectCommand) {
-        val event = StudyProgramSubjectCreatedEvent(
-                studyProgramSubjectId = StudyProgramSubjectId(),
-                studyProgramId = command.studyProgramCode,
-                mandatory = command.mandatory,
-                semester = command.semester,
-                order = command.order,
-                subjectGroup = command.subjectGroup,
-                dependenciesOverride = command.dependenciesOverride
-        )
-        this.on(event)
-        AggregateLifecycle.apply(event)
-    }
 
-    fun on(event: StudyProgramSubjectCreatedEvent) {
-
-    }
-
-    override fun getId(): Identifier<out Any> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getLabel(): String {
-        TODO("Not yet implemented")
-    }
-
+    override fun getId(): Identifier<out Any> = code
+    override fun getLabel(): String = name
 }

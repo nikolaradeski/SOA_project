@@ -11,7 +11,7 @@ class StudyProgramModificationServiceImpl(
         val commandGateway: CommandGateway
 ) : StudyProgramModificationService {
     override fun createStudyProgram(command: CreateStudyProgramCommand): CompletableFuture<StudyProgramId> {
-        return commandGateway.send(command);
+        return commandGateway.send<Any>(command).thenApply { StudyProgramId(command.code) }
     }
 
     override fun updateStudyProgramName(command: UpdateStudyProgramNameCommand): CompletableFuture<Any> {

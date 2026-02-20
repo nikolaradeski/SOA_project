@@ -1,17 +1,16 @@
-FROM eclipse-temurin:21-jdk-alpine AS build
-WORKDIR /app
+FROM maven:3.8.5-openjdk-17 AS builder
+LABEL authors="Boris Djotov"
+WORKDIR /home/project
 
-COPY mvnw pom.xml ./
-COPY .mvn .mvn
-RUN chmod +x mvnw && \
-    ./mvnw dependency:go-offline -B -Dmaven.repo.local=/root/.m2
-
+COPY pom.xml ./
 COPY src ./src
-RUN ./mvnw clean package -DskipTests -B -Dmaven.repo.local=/root/.m2
 
-FROM eclipse-temurin:21-jre-alpine
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=builder /home/project/target/*.jar SPAccreditation.jar
 
-ENTRYPOINT ["java", "-XX:+ExitOnOutOfMemoryError", "-XX:+UseContainerSupport", "-jar", "/app/app.jar"]
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "SPAccreditation.jar"]

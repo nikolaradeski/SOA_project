@@ -1,13 +1,24 @@
 package mk.ukim.finki.soa.accreditation.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
-import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorId
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectBibliography
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectDependencies
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectGrading
 import mk.ukim.finki.soa.accreditation.model.subject.SubjectObligationDuration
 
 abstract class AbstractEvent(open val identifier: Identifier<out Any>) {
+    @JsonProperty("_eventType")
+    fun eventType(): String = this.javaClass.simpleName
+
+    //ova kje raboti samo za Subject, nema za StudyProgram
+    @JsonIgnore
+    fun eventTopic(): String =
+        this.javaClass.simpleName.removeSuffix("Event").replace(Regex("([a-z])([A-Z])"), "$1.$2").lowercase()
+
+    @JsonIgnore
+    open fun toExternalEvent(): Any? = null
 
 }
 /*------------------STUDY PROGRAM------------*/
@@ -16,40 +27,59 @@ abstract class StudyProgramEvent(
 ) : AbstractEvent(studyProgramId)
 
 data class StudyProgramCreatedEvent(
-        override val studyProgramId: StudyProgramId,
-        val name: String,
-        val nameEn: String,
-        val order: Int,
-        val durationYears: Int,
-        val generalInformation: String,
-        val graduationTitle: String,
-        val graduationTitleEn: String,
-        val inEnglish: Boolean,
-        val bilingual: Boolean,
-        val accreditation: AccreditationId,
-        val coordinator: ProfessorId,
-        val studyCycle: StudyCycle,
-        val subjectRestrictions: String,
+    override val studyProgramId: StudyProgramId,
 
+    val name: String,
+    val nameEn: String,
+    val order: Int,
+    val durationYears: Int,
 
-): StudyProgramEvent(studyProgramId){
+    val generalInformation: String?,
+    val graduationTitle: String?,
+    val graduationTitleEn: String?,
+    val subjectRestrictions: String?,
+
+    val inEnglish: Boolean,
+    val bilingual: Boolean,
+
+    val accreditation: AccreditationId,
+    val coordinator: ProfessorId?,
+
+    val studyCycle: StudyCycle
+) : StudyProgramEvent(studyProgramId) {
+
     constructor(command: CreateStudyProgramCommand) : this(
-            studyProgramId = StudyProgramId(),
-            name = command.name,
-            nameEn = command.nameEn,
-            order = command.order,
-            durationYears = command.durationYears,
-            generalInformation = command.generalInformation,
-            graduationTitle = command.graduationTitle,
-            graduationTitleEn = command.graduationTitleEn,
-            inEnglish = command.isItAvailableOnEnglish,
-            bilingual = command.bilingual,
-            accreditation = command.accreditation,
-            coordinator = command.coordinator,
-            studyCycle = command.studyCycle,
-            subjectRestrictions = command.subjectRestrictions,
-    )
+        studyProgramId = StudyProgramId(command.code),
+
+        name = command.name.takeIf { !it.isNullOrBlank() }
+            ?: throw IllegalArgumentException("StudyProgram name must not be blank"),
+
+        nameEn = command.nameEn.takeIf { it.isNullOrBlank() }
+            ?: throw IllegalArgumentException("StudyProgram nameEn must not be blank"),
+
+        order = command.order
+            ?: throw IllegalArgumentException("StudyProgram order is required"),
+
+        durationYears = command.durationYears
+            ?: throw IllegalArgumentException("durationYears is required"),
+
+        generalInformation = command.generalInformation,
+        graduationTitle = command.graduationTitle,
+        graduationTitleEn = command.graduationTitleEn,
+        subjectRestrictions = command.subjectRestrictions,
+
+        inEnglish = command.isItAvailableOnEnglish,
+        bilingual = command.bilingual,
+
+        accreditation = command.accreditation,
+        coordinator = command.coordinator,
+
+        studyCycle = command.studyCycle
+    ) {
+        require(durationYears > 0) { "durationYears must be > 0" }
+    }
 }
+
 
 
 data class StudyProgramNameUpdatedEvent(
@@ -249,8 +279,8 @@ abstract class SubjectEvent(
 
 data class SubjectCreatedEvent(
     override val subjectId: SubjectId,
-    val name: String,
-    val abbreviation: String,
+    val name: String?,
+    val abbreviation: String?,
     val semester: Int?,
     val weeklyLecturesClasses: Int?,
     val weeklyAuditoriumClasses: Int?,
@@ -274,8 +304,9 @@ data class SubjectCreatedEvent(
     val bibliography: SubjectBibliography?,
     val notes: List<String>?
 ) : SubjectEvent(subjectId) {
+
     constructor(command: CreateSubjectCommand) : this(
-        subjectId = SubjectId(),
+        subjectId = SubjectId(command.code),
         name = command.name,
         abbreviation = command.abbreviation,
         semester = command.semester,

@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service
 @Service
 class StudyProgramViewReadServiceImpl (val jpaRepository: StudyProgramViewJpaRepository): StudyProgramViewReadService{
     override fun findById(studyProgramId: StudyProgramId): StudyProgramView {
-        return jpaRepository.findById(studyProgramId).orElseThrow()
+        return jpaRepository.findById(studyProgramId)
+            .orElseThrow { NoSuchElementException("StudyProgramView not found: $studyProgramId") }
     }
 
     override fun findAll(): List<StudyProgramView> {

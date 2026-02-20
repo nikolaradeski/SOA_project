@@ -6,6 +6,7 @@ import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgram
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "document")
 internal class Document {
     @EmbeddedId
     @AttributeOverride(name = "value", column = Column(name = "id"))

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
         name = "Study Program Command API",
         description = "Handles commands for creating and modifying study programs."
 )
-class CommandDispatcherRestApi (
+class StudyProgramCommandDispatcherRestApi (
     val studyProgramModificationService: StudyProgramModificationService
 ) {
 
@@ -31,8 +31,6 @@ class CommandDispatcherRestApi (
     fun createStudProgram(
             @RequestBody commandDto: CreateStudyProgramCommand
     ) : ResponseEntity<Any> {
-        //Ne e podobro da se dodade Application Service Layer za preveduvanja na dto vo domain objekti ??
-        //A vo ovoj slucaj poradi sto isti bi bile Dto komandata so soodvetnata samo ja prativ soodvetna komanda.
         return ResponseEntity.ok(
                 studyProgramModificationService.createStudyProgram(commandDto)
         )
@@ -131,58 +129,58 @@ class CommandDispatcherRestApi (
 
     //----------------------------StudyProgramSubject----------------------------------
 
-    @Operation(
-        summary = "Create a new Study Program Subject",
-        description = "Submit a command to create a new Study Program Subject."
-    )
-    @PostMapping("/CreateStudyProgramSubjectCommand")
-    fun createStudyProgramSubject(@RequestBody command: CreateStudyProgramSubjectCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.createStudyProgramSubject(command))
-    }
-
-    @Operation(
-        summary = "Update the mandatory flag of a study program subject",
-        description = "Changes the mandatory flag for the given study program subject."
-    )
-    @PostMapping("/UpdateStudyProgramSubjectMandatoryCommand")
-    fun updateMandatory(@RequestBody command: UpdateStudyProgramSubjectMandatoryCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateMandatory(command))
-    }
-
-    @Operation(
-        summary = "Update the semester of a study program subject",
-        description = "Changes the semester for the given study program subject."
-    )
-    @PostMapping("/UpdateStudyProgramSubjectSemesterCommand")
-    fun updateSemester(@RequestBody command: UpdateStudyProgramSubjectSemesterCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateSemester(command))
-    }
-
-    @Operation(
-        summary = "Update the order of a study program subject",
-        description = "Changes the display order for the given study program subject."
-    )
-    @PostMapping("/UpdateStudyProgramSubjectOrderCommand")
-    fun updateOrder(@RequestBody command: UpdateStudyProgramSubjectOrderCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateOrder(command))
-    }
-
-    @Operation(
-        summary = "Update the subject group of a study program subject",
-        description = "Changes the subject group for the given study program subject."
-    )
-    @PostMapping("/UpdateStudyProgramSubjectSubjectGroupCommand")
-    fun updateSubjectGroup(@RequestBody command: UpdateStudyProgramSubjectSubjectGroupCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateSubjectGroup(command))
-    }
-
-    @Operation(
-        summary = "Update the dependencies override for a study program subject",
-        description = "Changes the dependency override string for the given study program subject."
-    )
-    @PostMapping("/UpdateStudyProgramSubjectDependenciesOverrideCommand")
-    fun updateDependenciesOverride(@RequestBody command: UpdateStudyProgramSubjectDependenciesOverrideCommand): ResponseEntity<Any> {
-        return ResponseEntity.ok(studyProgramModificationService.updateDependenciesOverride(command))
-    }
+//    @Operation(
+//        summary = "Create a new Study Program Subject",
+//        description = "Submit a command to create a new Study Program Subject."
+//    )
+//    @PostMapping("/CreateStudyProgramSubjectCommand")
+//    fun createStudyProgramSubject(@RequestBody command: CreateStudyProgramSubjectCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.createStudyProgramSubject(command))
+//    }
+//
+//    @Operation(
+//        summary = "Update the mandatory flag of a study program subject",
+//        description = "Changes the mandatory flag for the given study program subject."
+//    )
+//    @PostMapping("/UpdateStudyProgramSubjectMandatoryCommand")
+//    fun updateMandatory(@RequestBody command: UpdateStudyProgramSubjectMandatoryCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.updateMandatory(command))
+//    }
+//
+//    @Operation(
+//        summary = "Update the semester of a study program subject",
+//        description = "Changes the semester for the given study program subject."
+//    )
+//    @PostMapping("/UpdateStudyProgramSubjectSemesterCommand")
+//    fun updateSemester(@RequestBody command: UpdateStudyProgramSubjectSemesterCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.updateSemester(command))
+//    }
+//
+//    @Operation(
+//        summary = "Update the order of a study program subject",
+//        description = "Changes the display order for the given study program subject."
+//    )
+//    @PostMapping("/UpdateStudyProgramSubjectOrderCommand")
+//    fun updateOrder(@RequestBody command: UpdateStudyProgramSubjectOrderCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.updateOrder(command))
+//    }
+//
+//    @Operation(
+//        summary = "Update the subject group of a study program subject",
+//        description = "Changes the subject group for the given study program subject."
+//    )
+//    @PostMapping("/UpdateStudyProgramSubjectSubjectGroupCommand")
+//    fun updateSubjectGroup(@RequestBody command: UpdateStudyProgramSubjectSubjectGroupCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.updateSubjectGroup(command))
+//    }
+//
+//    @Operation(
+//        summary = "Update the dependencies override for a study program subject",
+//        description = "Changes the dependency override string for the given study program subject."
+//    )
+//    @PostMapping("/UpdateStudyProgramSubjectDependenciesOverrideCommand")
+//    fun updateDependenciesOverride(@RequestBody command: UpdateStudyProgramSubjectDependenciesOverrideCommand): ResponseEntity<Any> {
+//        return ResponseEntity.ok(studyProgramModificationService.updateDependenciesOverride(command))
+//    }
 
 }

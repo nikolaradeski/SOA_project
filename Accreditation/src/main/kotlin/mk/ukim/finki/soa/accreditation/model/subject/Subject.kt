@@ -5,126 +5,77 @@ import mk.ukim.finki.soa.accreditation.model.*
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.spring.stereotype.Aggregate
 import mk.ukim.finki.soa.accreditation.model.generalEnums.StudyCycle
+import mk.ukim.finki.soa.accreditation.model.proffesorSnapShot.ProfessorInformation
 import org.axonframework.commandhandling.CommandHandler
+import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateLifecycle
 
-@Entity
 @Aggregate(repository = "axonSubjectRepository")
-public class Subject {
+@Entity
+class Subject {
+
     @AggregateIdentifier
     @EmbeddedId
     @AttributeOverride(name = "value", column = Column(name = "code"))
     private lateinit var code: SubjectId
+
+    // required in the aggregate state
     private lateinit var name: String
     private lateinit var abbreviation: String
 
-    @Enumerated(EnumType.STRING)
     private var semester: Int? = null
 
     private var weeklyLecturesClasses: Int? = null
-
     private var weeklyAuditoriumClasses: Int? = null
-
     private var weeklyLabClasses: Int? = null
-
     private var placeholder: Boolean? = null
-
     private var nameEn: String? = null
-
     private var defaultSemester: Short? = null
-
     private var credits: Float? = null
 
     @Enumerated(EnumType.STRING)
     private lateinit var studyCycle: StudyCycle
 
-
     private var language: String? = null
 
-
-    @Column(length = 8000)
-    private var learningMethods: String? = null
-
-
-    @Column(length = 8000)
-    private var goalsDescription: String? = null
-
-    @Column(length = 8000)
-    private var content: String? = null
-
-    @Column(length = 8000)
-    private var goalsDescriptionEn: String? = null
-
-    @Column(length = 8000)
-    private var contentEn: String? = null
-
-    @Column(length = 4000)
-    private var qualityControl: String? = null
-
+    @Column(length = 8000) private var learningMethods: String? = null
+    @Column(length = 8000) private var goalsDescription: String? = null
+    @Column(length = 8000) private var content: String? = null
+    @Column(length = 8000) private var goalsDescriptionEn: String? = null
+    @Column(length = 8000) private var contentEn: String? = null
+    @Column(length = 4000) private var qualityControl: String? = null
 
     @Embedded
     @AttributeOverride(name = "value", column = Column(name = "accreditation_id"))
-    private lateinit var accreditation: AccreditationId;
+    private lateinit var accreditation: AccreditationId
 
-    @Embedded
-    private var obligationDuration: SubjectObligationDuration? = null
-
-    @Embedded
-    private var dependencies: SubjectDependencies? = null
-
-    @Embedded
-    private var grading: SubjectGrading? = null
-
-    @Embedded
-    private var bibliography: SubjectBibliography? = null
+    @Embedded private var obligationDuration: SubjectObligationDuration? = null
+    @Embedded private var dependencies: SubjectDependencies? = null
+    @Embedded private var grading: SubjectGrading? = null
+    @Embedded private var bibliography: SubjectBibliography? = null
 
     @ElementCollection
-    private var notes: List<String>? = null
+    private var notes: List<String> = emptyList()
 
-//    @CommandHandler
-//    constructor(command: CreateSubjectCommand) {
-//        val event = SubjectCreatedEvent(command)
-//        this.on(event)
-//        AggregateLifecycle.apply(event)
-//    }
+    protected constructor()
 
     @CommandHandler
     constructor(command: CreateSubjectCommand) {
-        val event = SubjectCreatedEvent(
-            subjectId = SubjectId(),
-            name = command.name,
-            abbreviation = command.abbreviation,
-            semester = command.semester,
-            weeklyLecturesClasses = command.weeklyLecturesClasses,
-            weeklyAuditoriumClasses = command.weeklyAuditoriumClasses,
-            weeklyLabClasses = command.weeklyLabClasses,
-            placeholder = command.placeholder,
-            nameEn = command.nameEn,
-            defaultSemester = command.defaultSemester,
-            credits = command.credits,
-            studyCycle = command.studyCycle,
-            language = command.language,
-            learningMethods = command.learningMethods,
-            goalsDescription = command.goalsDescription,
-            content = command.content,
-            goalsDescriptionEn = command.goalsDescriptionEn,
-            contentEn = command.contentEn,
-            qualityControl = command.qualityControl,
-            accreditation = command.accreditation,
-            obligationDuration = command.obligationDuration,
-            dependencies = command.dependencies,
-            grading = command.grading,
-            bibliography = command.bibliography,
-            notes = command.notes
-        )
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        require(command.code.isNotBlank()) { "Subject code must not be blank" }
+        require(!command.name.isNullOrBlank()) { "Subject name is required" }
+        require(!command.abbreviation.isNullOrBlank()) { "Subject abbreviation is required" }
+
+        AggregateLifecycle.apply(SubjectCreatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectCreatedEvent) {
         this.code = event.subjectId
-        this.name = event.name
-        this.abbreviation = event.abbreviation
+
+        // since event fields are nullable now:
+        this.name = event.name ?: error("SubjectCreatedEvent.name must not be null")
+        this.abbreviation = event.abbreviation ?: error("SubjectCreatedEvent.abbreviation must not be null")
+
         this.semester = event.semester
         this.weeklyLecturesClasses = event.weeklyLecturesClasses
         this.weeklyAuditoriumClasses = event.weeklyAuditoriumClasses
@@ -146,16 +97,20 @@ public class Subject {
         this.dependencies = event.dependencies
         this.grading = event.grading
         this.bibliography = event.bibliography
-        this.notes = event.notes
+
+        this.notes = event.notes ?: emptyList()
     }
+
+
+    // Then add update command handlers + @EventSourcingHandler like you did for StudyProgram:
+    // UpdateSubjectNameCommand -> apply SubjectNameUpdatedEvent -> on(event){...}
 
     @CommandHandler
     fun handle(command: UpdateSubjectNameCommand) {
-        val event = SubjectNameUpdatedEvent(command.subjectId, command.name, command.nameEn)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectNameUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectNameUpdatedEvent) {
         this.name = event.name
         this.nameEn = event.nameEn
@@ -163,244 +118,222 @@ public class Subject {
 
     @CommandHandler
     fun handle(command: UpdateSubjectAbbreviationCommand) {
-        val event = SubjectAbbreviationUpdatedEvent(command.subjectId, command.abbreviation)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectAbbreviationUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectAbbreviationUpdatedEvent) {
         this.abbreviation = event.abbreviation
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectSemesterCommand) {
-        val event = SubjectSemesterUpdatedEvent(command.subjectId, command.semester)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectSemesterUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectSemesterUpdatedEvent) {
         this.semester = event.semester
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectWeeklyLecturesClassesCommand) {
-        val event = SubjectWeeklyLecturesUpdatedEvent(command.subjectId, command.weeklyLecturesClasses)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectWeeklyLecturesUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectWeeklyLecturesUpdatedEvent) {
         this.weeklyLecturesClasses = event.weeklyLecturesClasses
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectWeeklyAuditoriumClassesCommand) {
-        val event = SubjectWeeklyAuditoriumUpdatedEvent(command.subjectId, command.weeklyAuditoriumClasses)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectWeeklyAuditoriumUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectWeeklyAuditoriumUpdatedEvent) {
         this.weeklyAuditoriumClasses = event.weeklyAuditoriumClasses
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectWeeklyLabClassesCommand) {
-        val event = SubjectWeeklyLabUpdatedEvent(command.subjectId, command.weeklyLabClasses)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectWeeklyLabUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectWeeklyLabUpdatedEvent) {
         this.weeklyLabClasses = event.weeklyLabClasses
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectPlaceholderCommand) {
-        val event = SubjectPlaceholderUpdatedEvent(command.subjectId, command.placeholder)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectPlaceholderUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectPlaceholderUpdatedEvent) {
         this.placeholder = event.placeholder
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectDefaultSemesterCommand) {
-        val event = SubjectDefaultSemesterUpdatedEvent(command.subjectId, command.defaultSemester)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectDefaultSemesterUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectDefaultSemesterUpdatedEvent) {
         this.defaultSemester = event.defaultSemester
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectCreditsCommand) {
-        val event = SubjectCreditsUpdatedEvent(command.subjectId, command.credits)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectCreditsUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectCreditsUpdatedEvent) {
         this.credits = event.credits
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectStudyCycleCommand) {
-        val event = SubjectStudyCycleUpdatedEvent(command.subjectId, command.studyCycle)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectStudyCycleUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectStudyCycleUpdatedEvent) {
         this.studyCycle = event.studyCycle
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectLanguageCommand) {
-        val event = SubjectLanguageUpdatedEvent(command.subjectId, command.language)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectLanguageUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectLanguageUpdatedEvent) {
         this.language = event.language
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectLearningMethodsCommand) {
-        val event = SubjectLearningMethodsUpdatedEvent(command.subjectId, command.learningMethods)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectLearningMethodsUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectLearningMethodsUpdatedEvent) {
         this.learningMethods = event.learningMethods
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectGoalsDescriptionCommand) {
-        val event = SubjectGoalsDescriptionUpdatedEvent(command.subjectId, command.goalsDescription)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectGoalsDescriptionUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectGoalsDescriptionUpdatedEvent) {
         this.goalsDescription = event.goalsDescription
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectContentCommand) {
-        val event = SubjectContentUpdatedEvent(command.subjectId, command.content)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectContentUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectContentUpdatedEvent) {
         this.content = event.content
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectGoalsDescriptionEnCommand) {
-        val event = SubjectGoalsDescriptionEnUpdatedEvent(command.subjectId, command.goalsDescriptionEn)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectGoalsDescriptionEnUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectGoalsDescriptionEnUpdatedEvent) {
         this.goalsDescriptionEn = event.goalsDescriptionEn
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectContentEnCommand) {
-        val event = SubjectContentEnUpdatedEvent(command.subjectId, command.contentEn)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectContentEnUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectContentEnUpdatedEvent) {
         this.contentEn = event.contentEn
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectQualityControlCommand) {
-        val event = SubjectQualityControlUpdatedEvent(command.subjectId, command.qualityControl)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectQualityControlUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectQualityControlUpdatedEvent) {
         this.qualityControl = event.qualityControl
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectAccreditationCommand) {
-        val event = SubjectAccreditationUpdatedEvent(command.subjectId, command.accreditation)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectAccreditationUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectAccreditationUpdatedEvent) {
         this.accreditation = event.accreditation
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectObligationDurationCommand) {
-        val event = SubjectObligationDurationUpdatedEvent(command.subjectId, command.obligationDuration)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectObligationDurationUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectObligationDurationUpdatedEvent) {
         this.obligationDuration = event.obligationDuration
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectDependenciesCommand) {
-        val event = SubjectDependenciesUpdatedEvent(command.subjectId, command.dependencies)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectDependenciesUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectDependenciesUpdatedEvent) {
         this.dependencies = event.dependencies
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectGradingCommand) {
-        val event = SubjectGradingUpdatedEvent(command.subjectId, command.grading)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectGradingUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectGradingUpdatedEvent) {
         this.grading = event.grading
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectBibliographyCommand) {
-        val event = SubjectBibliographyUpdatedEvent(command.subjectId, command.bibliography)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectBibliographyUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectBibliographyUpdatedEvent) {
         this.bibliography = event.bibliography
     }
 
     @CommandHandler
     fun handle(command: UpdateSubjectNotesCommand) {
-        val event = SubjectNotesUpdatedEvent(command.subjectId, command.notes)
-        this.on(event)
-        AggregateLifecycle.apply(event)
+        AggregateLifecycle.apply(SubjectNotesUpdatedEvent(command))
     }
 
+    @EventSourcingHandler
     fun on(event: SubjectNotesUpdatedEvent) {
-        this.notes = event.notes
+        this.notes = event.notes ?: emptyList()
     }
 //
 //    fun updateName(value: String) {
@@ -498,5 +431,4 @@ public class Subject {
 //    fun updateNotes(value: List<String>?) {
 //        this.notes = value
 //    }
-
 }

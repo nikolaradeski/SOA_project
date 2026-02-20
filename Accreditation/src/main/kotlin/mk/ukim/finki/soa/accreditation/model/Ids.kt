@@ -1,5 +1,6 @@
 package mk.ukim.finki.soa.accreditation.model
 
+import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import mk.ukim.finki.soa.accreditation.model.accreditation.Accreditation
 import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgram
@@ -90,4 +91,14 @@ open class SubjectId(value: String) : Identifier<Subject>(value, Subject::class.
     override fun hashCode(): Int {
         return value.hashCode()
     }
+}
+
+@Embeddable
+data class ProfessorId(
+    @Column(name = "professor_id")
+    val value: String
+) {
+    constructor() : this(UUID.randomUUID().toString())
+
+    override fun toString(): String = value
 }

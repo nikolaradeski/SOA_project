@@ -5,7 +5,7 @@ import mk.ukim.finki.soa.accreditation.model.*
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateLifecycle
 
-@Entity
+//@Entity
 public class CurriculumSubject {
     @EmbeddedId
     @AttributeOverride(name = "value", column = Column(name = "id"))

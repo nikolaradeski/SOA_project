@@ -15,6 +15,18 @@ data class StudyProgramView(
         @EmbeddedId
         @AttributeOverride(name = "value", column = Column(name = "code"))
         val code: StudyProgramId,
+        val name: String,
+        val nameEn: String
+)
 
-        val name: String
+@Entity
+@Table(name = "subject")
+@Immutable
+data class SubjectView(
+        @EmbeddedId
+        @AttributeOverride(name = "value", column = Column(name = "code"))
+        val code: SubjectId,
+
+        val name: String,
+        val abbreviation: String
 )
