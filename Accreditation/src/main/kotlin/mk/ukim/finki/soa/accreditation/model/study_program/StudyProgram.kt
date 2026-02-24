@@ -211,4 +211,108 @@ class StudyProgram : LabeledEntity {
 
     override fun getId(): Identifier<out Any> = code
     override fun getLabel(): String = name
+
+    @ElementCollection
+    @CollectionTable(
+        name = "study_program_curriculum_subjects",
+        joinColumns = [JoinColumn(name = "study_program_code", referencedColumnName = "code")]
+    )
+    private val curriculumSubjectIds: MutableSet<CurriculumSubjectId> = mutableSetOf()
+
+    // ---------- CREATE ----------
+    @CommandHandler
+    fun handle(cmd: CreateStudyProgramSubjectCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+
+        require(cmd.semester > 0) { "semester must be > 0" }
+        require(cmd.order > 0) { "order must be > 0" }
+        require(!curriculumSubjectIds.contains(csId)) { "Curriculum subject already exists for this study program" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectCreatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectCreatedEvent) {
+        curriculumSubjectIds.add(event.curriculumSubjectId)
+    }
+
+
+    // ---------- UPDATE: mandatory ----------
+    @CommandHandler
+    fun handle(cmd: UpdateStudyProgramSubjectMandatoryCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+        require(curriculumSubjectIds.contains(csId)) { "Curriculum subject does not exist for this study program" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectMandatoryUpdatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectMandatoryUpdatedEvent) {
+        // no state needed besides existence tracking
+    }
+
+
+    // ---------- UPDATE: semester ----------
+    @CommandHandler
+    fun handle(cmd: UpdateStudyProgramSubjectSemesterCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+        require(curriculumSubjectIds.contains(csId)) { "Curriculum subject does not exist for this study program" }
+        require(cmd.semester > 0) { "semester must be > 0" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectSemesterUpdatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectSemesterUpdatedEvent) {
+        // no state needed besides existence tracking
+    }
+
+
+    // ---------- UPDATE: order ----------
+    @CommandHandler
+    fun handle(cmd: UpdateStudyProgramSubjectOrderCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+        require(curriculumSubjectIds.contains(csId)) { "Curriculum subject does not exist for this study program" }
+        require(cmd.order > 0) { "order must be > 0" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectOrderUpdatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectOrderUpdatedEvent) {
+        // no state needed besides existence tracking
+    }
+
+
+    // ---------- UPDATE: subjectGroup ----------
+    @CommandHandler
+    fun handle(cmd: UpdateStudyProgramSubjectSubjectGroupCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+        require(curriculumSubjectIds.contains(csId)) { "Curriculum subject does not exist for this study program" }
+        require(cmd.subjectGroup.isNotBlank()) { "subjectGroup must not be blank" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectSubjectGroupUpdatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectSubjectGroupUpdatedEvent) {
+        // no state needed besides existence tracking
+    }
+
+
+    // ---------- UPDATE: dependenciesOverride ----------
+    @CommandHandler
+    fun handle(cmd: UpdateStudyProgramSubjectDependenciesOverrideCommand) {
+        val csId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId)
+        require(curriculumSubjectIds.contains(csId)) { "Curriculum subject does not exist for this study program" }
+
+        AggregateLifecycle.apply(StudyProgramSubjectDependenciesOverrideUpdatedEvent(cmd))
+    }
+
+    @EventSourcingHandler
+    fun on(event: StudyProgramSubjectDependenciesOverrideUpdatedEvent) {
+        // no state needed besides existence tracking
+    }
+
+
 }

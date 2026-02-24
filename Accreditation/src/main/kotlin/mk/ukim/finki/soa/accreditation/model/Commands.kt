@@ -104,8 +104,8 @@ data class UpdateStudyProgramSubjectRestrictionsCommand(
 
 data class CreateStudyProgramSubjectCommand(
         @TargetAggregateIdentifier
-//        val studyProgramSubjectId: String,
-        val studyProgramCode: StudyProgramId,
+        val studyProgramId: StudyProgramId,   // <-- aggregate id
+        val subjectId: SubjectId,
         val mandatory: Boolean,
         val semester: Int,
         val order: Float,
@@ -115,31 +115,36 @@ data class CreateStudyProgramSubjectCommand(
 
 data class UpdateStudyProgramSubjectMandatoryCommand(
         @TargetAggregateIdentifier
-        val studyProgramSubjectId: StudyProgramSubjectId,
+        val studyProgramId: StudyProgramId,
+        val subjectId: SubjectId,
         val mandatory: Boolean
 )
 
 data class UpdateStudyProgramSubjectSemesterCommand(
         @TargetAggregateIdentifier
-        val studyProgramSubjectId: StudyProgramSubjectId,
+        val studyProgramId: StudyProgramId,
+        val subjectId: SubjectId,
         val semester: Int
 )
 
 data class UpdateStudyProgramSubjectOrderCommand(
         @TargetAggregateIdentifier
-        val studyProgramSubjectId: StudyProgramSubjectId,
+        val studyProgramId: StudyProgramId,
+        val subjectId: SubjectId,
         val order: Float
 )
 
 data class UpdateStudyProgramSubjectSubjectGroupCommand(
         @TargetAggregateIdentifier
-        val studyProgramSubjectId: StudyProgramSubjectId,
+        val studyProgramId: StudyProgramId,
+        val subjectId: SubjectId,
         val subjectGroup: String
 )
 
 data class UpdateStudyProgramSubjectDependenciesOverrideCommand(
         @TargetAggregateIdentifier
-        val studyProgramSubjectId: StudyProgramSubjectId,
+        val studyProgramId: StudyProgramId,
+        val subjectId: SubjectId,
         val dependenciesOverride: String
 )
 

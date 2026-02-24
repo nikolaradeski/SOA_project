@@ -54,7 +54,7 @@ data class StudyProgramCreatedEvent(
         name = command.name.takeIf { !it.isNullOrBlank() }
             ?: throw IllegalArgumentException("StudyProgram name must not be blank"),
 
-        nameEn = command.nameEn.takeIf { it.isNullOrBlank() }
+        nameEn = command.nameEn.takeIf { !it.isNullOrBlank() }
             ?: throw IllegalArgumentException("StudyProgram nameEn must not be blank"),
 
         order = command.order
@@ -197,77 +197,89 @@ data class StudyProgramSubjectRestrictionsUpdatedEvent(
 /*------------------STUDY PROGRAM SUBJECT------------*/
 
 abstract class StudyProgramSubjectEvent(
-    open val studyProgramSubjectId: StudyProgramSubjectId
-) : AbstractEvent(studyProgramSubjectId)
+    open val studyProgramId: StudyProgramId,
+    open val curriculumSubjectId: CurriculumSubjectId
+) : AbstractEvent(studyProgramId)
 
 data class StudyProgramSubjectCreatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
-    val studyProgramId: StudyProgramId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val mandatory: Boolean,
     val semester: Int,
     val order: Float,
     val subjectGroup: String,
     val dependenciesOverride: String,
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
 
-    constructor(command: CreateStudyProgramSubjectCommand) : this(
-        studyProgramSubjectId = StudyProgramSubjectId(),
-        studyProgramId = command.studyProgramCode,
-        mandatory = command.mandatory,
-        semester = command.semester,
-        order = command.order,
-        subjectGroup = command.subjectGroup,
-        dependenciesOverride = command.dependenciesOverride
+    constructor(cmd: CreateStudyProgramSubjectCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        mandatory = cmd.mandatory,
+        semester = cmd.semester,
+        order = cmd.order,
+        subjectGroup = cmd.subjectGroup,
+        dependenciesOverride = cmd.dependenciesOverride
     )
 }
 
 data class StudyProgramSubjectMandatoryUpdatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val mandatory: Boolean
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
-    constructor(command: UpdateStudyProgramSubjectMandatoryCommand) : this(
-        studyProgramSubjectId = command.studyProgramSubjectId,
-        mandatory = command.mandatory
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
+
+    constructor(cmd: UpdateStudyProgramSubjectMandatoryCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        mandatory = cmd.mandatory
     )
 }
 
 data class StudyProgramSubjectSemesterUpdatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val semester: Int
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
-    constructor(command: UpdateStudyProgramSubjectSemesterCommand) : this(
-        studyProgramSubjectId = command.studyProgramSubjectId,
-        semester = command.semester
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
+    constructor(cmd: UpdateStudyProgramSubjectSemesterCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        semester = cmd.semester
     )
 }
 
 data class StudyProgramSubjectOrderUpdatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val order: Float
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
-    constructor(command: UpdateStudyProgramSubjectOrderCommand) : this(
-        studyProgramSubjectId = command.studyProgramSubjectId,
-        order = command.order
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
+    constructor(cmd: UpdateStudyProgramSubjectOrderCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        order = cmd.order
     )
 }
 
 data class StudyProgramSubjectSubjectGroupUpdatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val subjectGroup: String
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
-    constructor(command: UpdateStudyProgramSubjectSubjectGroupCommand) : this(
-        studyProgramSubjectId = command.studyProgramSubjectId,
-        subjectGroup = command.subjectGroup
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
+    constructor(cmd: UpdateStudyProgramSubjectSubjectGroupCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        subjectGroup = cmd.subjectGroup
     )
 }
 
 data class StudyProgramSubjectDependenciesOverrideUpdatedEvent(
-    override val studyProgramSubjectId: StudyProgramSubjectId,
+    override val studyProgramId: StudyProgramId,
+    override val curriculumSubjectId: CurriculumSubjectId,
     val dependenciesOverride: String
-) : StudyProgramSubjectEvent(studyProgramSubjectId) {
-    constructor(command: UpdateStudyProgramSubjectDependenciesOverrideCommand) : this(
-        studyProgramSubjectId = command.studyProgramSubjectId,
-        dependenciesOverride = command.dependenciesOverride
+) : StudyProgramSubjectEvent(studyProgramId, curriculumSubjectId) {
+    constructor(cmd: UpdateStudyProgramSubjectDependenciesOverrideCommand) : this(
+        studyProgramId = cmd.studyProgramId,
+        curriculumSubjectId = CurriculumSubjectId(cmd.studyProgramId, cmd.subjectId),
+        dependenciesOverride = cmd.dependenciesOverride
     )
 }
 

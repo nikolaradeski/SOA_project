@@ -1,12 +1,15 @@
 package mk.ukim.finki.soa.accreditation.model
 
+import jakarta.persistence.AttributeOverride
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
 import mk.ukim.finki.soa.accreditation.model.accreditation.Accreditation
 import mk.ukim.finki.soa.accreditation.model.study_program.StudyProgram
 import mk.ukim.finki.soa.accreditation.model.study_program.CurriculumSubject
 import mk.ukim.finki.soa.accreditation.model.study_program.documents.Document
 import mk.ukim.finki.soa.accreditation.model.subject.Subject
+import java.io.Serializable
 
 import java.util.*
 
@@ -36,23 +39,6 @@ open class StudyProgramId(value: String) : Identifier<StudyProgram>(value, Study
         if (other?.javaClass != javaClass) return false
 
         return this.value == (other as StudyProgramId).value
-    }
-
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
-}
-
-@Embeddable
-open class StudyProgramSubjectId(value: String) : Identifier<CurriculumSubject>(value, CurriculumSubject::class.java){
-    constructor() : this(UUID.randomUUID().toString())
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
-
-        return this.value == (other as StudyProgramSubjectId).value
     }
 
     override fun hashCode(): Int {
@@ -102,3 +88,14 @@ data class ProfessorId(
 
     override fun toString(): String = value
 }
+
+@Embeddable
+data class CurriculumSubjectId(
+    @Embedded
+    @AttributeOverride(name = "value", column = Column(name = "study_program"))
+    val studyProgram: StudyProgramId,
+
+    @Embedded
+    @AttributeOverride(name = "value", column = Column(name = "subject"))
+    val subject: SubjectId
+) : Serializable

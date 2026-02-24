@@ -8,77 +8,64 @@ import java.util.concurrent.CompletableFuture
 
 @Service
 class StudyProgramModificationServiceImpl(
-        val commandGateway: CommandGateway
+    private val commandGateway: CommandGateway
 ) : StudyProgramModificationService {
+
     override fun createStudyProgram(command: CreateStudyProgramCommand): CompletableFuture<StudyProgramId> {
         return commandGateway.send<Any>(command).thenApply { StudyProgramId(command.code) }
     }
 
-    override fun updateStudyProgramName(command: UpdateStudyProgramNameCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
+    override fun updateStudyProgramName(command: UpdateStudyProgramNameCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramDurationYears(command: UpdateStudyProgramDurationYearsCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramOrder(command: UpdateStudyProgramOrderCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramGeneralInformation(command: UpdateStudyProgramGeneralInformationCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramGraduationTitle(command: UpdateStudyProgramGraduationTitleCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramSubjectRestrictions(command: UpdateStudyProgramSubjectRestrictionsCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramInEnglish(command: UpdateStudyProgramEnglishAvailabilityCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    override fun updateStudyProgramCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
+
+    // -------------------------------- CurriculumSubject (StudyProgramSubject) --------------------------------
+
+    override fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<CurriculumSubjectId> {
+        // We want the caller to get the composite identity back immediately.
+        // Even if Axon returns something else, we can deterministically compute it.
+        return commandGateway.send<Any>(command)
+            .thenApply { CurriculumSubjectId(command.studyProgramId, command.subjectId) }
     }
 
-    override fun updateStudyProgramDurationYears(command: UpdateStudyProgramDurationYearsCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
+    override fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
 
-    override fun updateStudyProgramOrder(command: UpdateStudyProgramOrderCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
+    override fun updateSemester(command: UpdateStudyProgramSubjectSemesterCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
 
-    override fun updateStudyProgramGeneralInformation(command: UpdateStudyProgramGeneralInformationCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
+    override fun updateOrder(command: UpdateStudyProgramSubjectOrderCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
 
-    override fun updateStudyProgramGraduationTitle(command: UpdateStudyProgramGraduationTitleCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
+    override fun updateSubjectGroup(command: UpdateStudyProgramSubjectSubjectGroupCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
 
-    override fun updateStudyProgramSubjectRestrictions(command: UpdateStudyProgramSubjectRestrictionsCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
-
-    override fun updateStudyProgramInEnglish(command: UpdateStudyProgramEnglishAvailabilityCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
-
-    override fun updateStudyProgramStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
-
-    override fun updateStudyProgramBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
-
-    override fun updateStudyProgramCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any> {
-        return commandGateway.send(command)
-    }
-
-//-------------------------------------StudyProgramSubject-----------------------------------------------
-
-    override fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<StudyProgramSubjectId> {
-        return commandGateway.send(command);
-    }
-
-    override fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any> {
-        return commandGateway.send(command);
-    }
-
-    override fun updateSemester(command: UpdateStudyProgramSubjectSemesterCommand): CompletableFuture<Any> {
-        return commandGateway.send(command);
-    }
-
-    override fun updateOrder(command: UpdateStudyProgramSubjectOrderCommand): CompletableFuture<Any> {
-        return commandGateway.send(command);
-    }
-
-    override fun updateSubjectGroup(command: UpdateStudyProgramSubjectSubjectGroupCommand): CompletableFuture<Any> {
-        return commandGateway.send(command);
-    }
-
-    override fun updateDependenciesOverride(command: UpdateStudyProgramSubjectDependenciesOverrideCommand): CompletableFuture<Any> {
-        return commandGateway.send(command);
-    }
-
+    override fun updateDependenciesOverride(command: UpdateStudyProgramSubjectDependenciesOverrideCommand): CompletableFuture<Any> =
+        commandGateway.send(command)
 }
-

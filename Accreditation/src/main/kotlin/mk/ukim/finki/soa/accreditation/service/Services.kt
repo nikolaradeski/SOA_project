@@ -15,8 +15,9 @@ interface StudyProgramModificationService {
     fun updateStudyProgramStudyCycle(command: UpdateStudyProgramStudyCycleCommand): CompletableFuture<Any>
     fun updateStudyProgramBilingual(command: UpdateStudyProgramBilingualCommand): CompletableFuture<Any>
     fun updateStudyProgramCoordinator(command: UpdateStudyProgramCoordinatorCommand): CompletableFuture<Any>
-    /* ---------StudyProgramSubject-------*/
-    fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<StudyProgramSubjectId>
+
+    /* --------- CurriculumSubject (StudyProgramSubject) ------- */
+    fun createStudyProgramSubject(command: CreateStudyProgramSubjectCommand): CompletableFuture<CurriculumSubjectId>
     fun updateMandatory(command: UpdateStudyProgramSubjectMandatoryCommand): CompletableFuture<Any>
     fun updateSemester(command: UpdateStudyProgramSubjectSemesterCommand): CompletableFuture<Any>
     fun updateOrder(command: UpdateStudyProgramSubjectOrderCommand): CompletableFuture<Any>
