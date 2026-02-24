@@ -313,6 +313,4 @@ class StudyProgram : LabeledEntity {
     fun on(event: StudyProgramSubjectDependenciesOverrideUpdatedEvent) {
         // no state needed besides existence tracking
     }
-
-
 }

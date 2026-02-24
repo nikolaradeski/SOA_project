@@ -24,4 +24,8 @@ interface CurriculumSubjectJpaRepository : JpaRepository<CurriculumSubject, Curr
         studyProgram: StudyProgramId,
         semester: Int
     ): List<CurriculumSubject>
+
+    fun findAllByIdStudyProgramAndMandatoryTrue(
+        studyProgram: StudyProgramId
+    ): List<CurriculumSubject>
 }
